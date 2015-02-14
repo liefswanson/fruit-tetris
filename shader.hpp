@@ -24,4 +24,4 @@ public:
 	void           Use();
 	
 };
-#endif	// __SHADER_H_INCLUDED__
+#endif	// __SHADER_HPP__

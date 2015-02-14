@@ -10,6 +10,10 @@ using namespace std;
 // GLFW
 #include <GLFW/glfw3.h>
 
+const GLuint WIDTH = 800,
+	         HEIGHT = 600;
+
+
 int main() {
 	glfwInit();
 
@@ -19,16 +23,34 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", nullptr, nullptr); // Windowed
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
+    if (window == NULL) {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
 
+	
 	glewExperimental = GL_TRUE;
-	glewInit();
+    if (glewInit() != GLEW_OK) {
+        std::cout << "Failed to initialize GLEW" << std::endl;
+		glfwTerminate();
+		return -1;
+    }
 
-	glViewport(0, 0, 800, 600);
+	
+	glViewport(0, 0, WIDTH, HEIGHT);
 
 	while(!glfwWindowShouldClose(window)){
+		glfwPollEvents();
+
+
+		glClearColor(1.f, 1.f, 1.f, 1.f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		
+		glfwSwapBuffers(window);
 	}
 
 	glfwTerminate(); 

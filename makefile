@@ -1,11 +1,11 @@
-libs = -lGLEW -lglfw -lGL -lX11 -lpthread -lXrandr -lXi
+libs = -lGLEW -lglfw -lGL -lX11 -lpthread #-lXrandr -lXi
 flags = -Wall -g
-std = -std=c++14
+std = -std=c++11
 cc = clang++
 
 
 all: main.o shader.o
-	$(cc) $(std) $(libs) main.o shader.o -o main.exe
+	$(cc) $(std) $(libs) main.o shader.o -o fruit-tetris.exe
 
 main.o: main.cpp
 	$(cc) $(std) $(flags) -c main.cpp -o main.o
@@ -20,4 +20,4 @@ run: all
 	./main.exe
 
 clean:
-	rm *.o
+	rm *.o *.exe
