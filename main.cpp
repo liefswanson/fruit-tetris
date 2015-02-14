@@ -12,12 +12,12 @@
 // GLFW
 #include <GLFW/glfw3.h>
 
+using namespace std;
+
 const GLuint WIDTH  = 800,
 	         HEIGHT = 600;
 
 const GLfloat BG = 0.082f;
-
-using namespace std;
 
 int main() {
 	glfwInit();
@@ -46,17 +46,18 @@ int main() {
     }
 
 	chdir("shaders");
-	
-	GLuint fApple   = readCompile("apple.frag",   GL_FRAGMENT_SHADER);
-	GLuint fBannana = readCompile("bannana.frag", GL_FRAGMENT_SHADER);
-	GLuint fGrape   = readCompile("grape.frag",   GL_FRAGMENT_SHADER);
-	GLuint fPear    = readCompile("pear.frag",    GL_FRAGMENT_SHADER);
-	GLuint fOrange  = readCompile("orange.frag",  GL_FRAGMENT_SHADER);
-	GLuint fDefault = readCompile("default.frag", GL_FRAGMENT_SHADER);
-
-	GLuint fGrid    = readCompile("grid.frag",    GL_FRAGMENT_SHADER);
 
 	GLuint vert     = readCompile("basic.vert",   GL_VERTEX_SHADER);
+	
+	//GLuint fApple   = readCompile("apple.frag",   GL_FRAGMENT_SHADER);
+	//GLuint fBannana = readCompile("bannana.frag", GL_FRAGMENT_SHADER);
+	//GLuint fGrape   = readCompile("grape.frag",   GL_FRAGMENT_SHADER);
+	GLuint fPear    = readCompile("pear.frag",    GL_FRAGMENT_SHADER);
+	//GLuint fOrange  = readCompile("orange.frag",  GL_FRAGMENT_SHADER);
+	//GLuint fDefault = readCompile("default.frag", GL_FRAGMENT_SHADER);
+
+	//GLuint fGrid    = readCompile("grid.frag",    GL_FRAGMENT_SHADER);
+
 
 	Block test = Block(0.f, 0.f,
 					   0.4f, 0.8f,
@@ -72,6 +73,7 @@ int main() {
 		glClearColor(BG, BG, BG, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		test.Relocate(-0.6f, -0.6f);
 		test.Render();
 		
 		glfwSwapBuffers(window);

@@ -24,7 +24,7 @@ private:
 
 	GLfloat w, h;
 
-	Shader shader;
+	GLuint shader;
 	
 	GLuint _fruit;
 	
