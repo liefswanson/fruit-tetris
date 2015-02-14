@@ -17,11 +17,12 @@ private:
 public:
 	Shader();
 
-	GLuint         ReadCompile(const GLchar* Path);
-
 	void           Attach(GLuint shaderRef);
 	void           Link();
 	void           Use();
-	
+	GLuint         ref();
 };
+
+GLuint             readCompile(const GLchar* Path,
+							   GLuint type);
 #endif	// __SHADER_HPP__

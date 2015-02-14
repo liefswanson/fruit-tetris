@@ -6,8 +6,36 @@ Shader::Shader(){
 	this->Program = glCreateProgram();
 }
 
+void
+Shader::Attach(GLuint shaderRef) {
+	glAttachShader(this->Program, shaderRef);
+}
+
+void
+Shader::Link() {
+	glLinkProgram(this->Program);
+	GLint success;
+	GLchar infoLog[512];
+	glGetProgramiv(this->Program, GL_LINK_STATUS, &success);
+	if(!success){
+		glGetProgramInfoLog(this->Program, 512, NULL, infoLog);
+		cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << endl;
+	}
+}
+
 GLuint
-Shader::ReadCompile(const GLchar* path) {
+Shader::ref(){
+	return Program;
+}
+
+void
+Shader::Use() {
+	glUseProgram(this->Program);
+}
+
+
+GLuint
+readCompile(const GLchar* path, GLuint type) {
 	string source;
 
 	try {
@@ -24,20 +52,7 @@ Shader::ReadCompile(const GLchar* path) {
 
 	const GLchar* charSource = source.c_str();
 	
-	GLuint compiled = 0;
-
-
-	const GLchar* ext = strrchr(path, '.');
-
-
-	// determine the type of shader
-	if (strcmp(ext, ".vert") == 0) {
-		compiled = glCreateShader(GL_VERTEX_SHADER);
-	} else if (strcmp(ext, ".frag") == 0) {
-		compiled = glCreateShader(GL_FRAGMENT_SHADER);
-	} else {
-		//? non glsl file input
-	}
+	GLuint compiled = glCreateShader(type);
 
 	glShaderSource(compiled, 1, &charSource, NULL);
 	glCompileShader(compiled);
@@ -51,27 +66,4 @@ Shader::ReadCompile(const GLchar* path) {
 	}
 	
 	return compiled;
-}
-
-void
-Shader::Attach(GLuint shaderRef) {
-	glAttachShader(this->Program, shaderRef);
-}
-
-void
-Shader::Link() {
-	glLinkProgram(this->Program);
-	
-	GLint success;
-	GLchar infoLog[512];
-	glGetProgramiv(this->Program, GL_LINK_STATUS, &success);
-	if(!success){
-		glGetProgramInfoLog(this->Program, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << endl;
-	}
-}
-
-void
-Shader::Use() {
-	glUseProgram(this->Program);
 }
