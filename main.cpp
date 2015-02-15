@@ -19,15 +19,76 @@ const GLuint WIDTH  = 540,
 	         HEIGHT = 1040;
 
 
-const GLuint COLUMNS  = 10,
-	         ROWS     = 20;
+const GLuint COLS  = 10,
+	         ROWS  = 20;
 
 
 const GLuint MARGINS = 20;
 
 const GLfloat BG = 0.082f;
 
-int main() {
+const GLfloat heightRatio = (GLfloat)HEIGHT / ((GLfloat)HEIGHT + (GLfloat)MARGINS*2);
+const GLfloat widthRatio  = (GLfloat)WIDTH  / ((GLfloat)WIDTH  + (GLfloat)MARGINS*2);
+
+//take note that position can be negative and percent cannot 
+RangeMap xpos     = RangeMap(0, 100, -widthRatio,  widthRatio);
+RangeMap ypos     = RangeMap(0, 100, heightRatio, -heightRatio);
+RangeMap xpercent = RangeMap(0, 100, 0,  2*widthRatio);
+RangeMap ypercent = RangeMap(0, 100, 0,  2*heightRatio);
+
+class Grid {
+private:
+	Tile* gridx[COLS+1] = {};
+	Tile* gridy[ROWS+1]    = {};
+	
+public:
+	Tile* board[COLS][ROWS] = {};
+
+	Grid(GLuint vert, GLuint frag);
+	~Grid();
+	void render();
+};
+
+Grid::Grid(GLuint vert, GLuint frag) {
+	for (GLuint i = 0; i <= ROWS; i++) {
+		gridy[i] = new Tile
+			(xpos.map(0.f),       ypos.map(i * 5.f),
+			 xpercent.map(100.f), ypercent.map(0.5f),
+			 vert, frag, NONE);
+	}
+
+	for (GLuint i = 0; i <= COLS; i++) {
+		gridx[i] = new Tile
+			(xpos.map(i * 10.f), ypos.map(0.f),
+			 xpercent.map(1.f),  ypercent.map(100.5f),
+			 vert, frag, NONE);
+	}
+}
+
+Grid::~Grid(){
+	for (GLuint i = 0; i <= COLS; i++) {
+		delete gridx[i];
+	}
+	
+	for (GLuint i = 0; i <= ROWS; i++) {
+	 	delete gridy[i];
+	}
+	
+}
+
+void
+Grid::render(){
+	for (GLuint i = 0; i <= COLS; i++) {
+		gridx[i]->Render();
+	}
+		
+	for (GLuint i = 0; i <= ROWS; i++) {
+		gridy[i]->Render();
+	}
+}
+
+int
+main() {
 	glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -55,7 +116,7 @@ int main() {
 
 	chdir("shaders");
 
-	GLuint vert     = readCompile("basic.vert",   GL_VERTEX_SHADER);
+	GLuint vBasic   = readCompile("basic.vert",   GL_VERTEX_SHADER);
 	
 	//GLuint fApple   = readCompile("apple.frag",   GL_FRAGMENT_SHADER);
 	//GLuint fBannana = readCompile("banana.frag",  GL_FRAGMENT_SHADER);
@@ -71,72 +132,20 @@ int main() {
 	
 	glViewport(0, 0, WIDTH, HEIGHT);
 
+	Grid grid = Grid(vBasic, fGrid);
 
-	//board initialization
-
-	GLfloat heightRatio = (GLfloat)HEIGHT / ((GLfloat)HEIGHT + (GLfloat)MARGINS*2);
-	GLfloat widthRatio  = (GLfloat)WIDTH  / ((GLfloat)WIDTH  + (GLfloat)MARGINS*2);
-
-	//take note that position can be negative and percent cannot 
-	RangeMap xpos = RangeMap(0, 100, -widthRatio,  widthRatio);
-	RangeMap ypos = RangeMap(0, 100, heightRatio, -heightRatio);
-	RangeMap xpercent = RangeMap(0, 100, 0,  2*widthRatio);
-	RangeMap ypercent = RangeMap(0, 100, 0,  2*heightRatio);
-
-	Tile* board[COLUMNS][ROWS] = {};
-
-	Tile* gridx[COLUMNS+1] = {};
-	Tile* gridy[ROWS+1] = {};
-
-	for(GLuint i = 0; i <= ROWS; i++) {
-		gridy[i] =
-			new Tile(xpos.map(0.f),
-					 ypos.map(i*5.f),
-					 xpercent.map(100.f),
-					 ypercent.map(0.5f),
-					 vert, fGrid,
-					 NONE);
-	}
-
-	for(GLuint i = 0; i <= COLUMNS; i++) {
-		gridx[i] =
-			new Tile(xpos.map(i*10.f),
-					 ypos.map(0.f),
-					 xpercent.map(1.f),
-					 ypercent.map(100.5f),
-					 vert, fGrid,
-					 NONE);
-		std::cout << i << std::endl;
-	}
-
-
-	
-	while(!glfwWindowShouldClose(window)){
+	while (!glfwWindowShouldClose(window)){
 		glfwPollEvents();
 
 		glClearColor(BG, BG, BG, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		for(GLuint i = 0; i <= COLUMNS; i++) {
-			gridx[i]->Render();
-		}
-		
-		for(GLuint i = 0; i <= ROWS; i++) {
-		 	gridy[i]->Render();
-		}
+		grid.render();
 		
 		glfwSwapBuffers(window);
 	}
 
-	for(GLuint i = 0; i <= COLUMNS; i++) {
-		delete gridx[i];
-	}
-	
-	for(GLuint i = 0; i <= ROWS; i++) {
-	 	delete gridy[i];
-	}
-	
-
 	glfwTerminate(); 
 	return 0;
 }
+
