@@ -15,52 +15,57 @@
 
 using namespace std;
 
-const GLuint WIDTH  = 540,
-	         HEIGHT = 1040;
+const GLuint HEIGHT = 1000,
+	         WIDTH  = 500;
 
+const GLfloat HW_RATIO = (GLfloat)HEIGHT/
+	                     (GLfloat)WIDTH;
 
-const GLuint COLS  = 10,
-	         ROWS  = 20;
-
+const GLuint ROWS  = 20,
+	         COLS  = 10;
 
 const GLuint MARGINS = 20;
 
 const GLfloat BG = 0.082f;
 
-const GLfloat heightRatio = (GLfloat)HEIGHT / ((GLfloat)HEIGHT + (GLfloat)MARGINS*2);
-const GLfloat widthRatio  = (GLfloat)WIDTH  / ((GLfloat)WIDTH  + (GLfloat)MARGINS*2);
+const GLfloat PERCENT_INSIDE_MARGINS_HEIGHT = (GLfloat)HEIGHT / ((GLfloat)HEIGHT + (GLfloat)MARGINS*2);
+const GLfloat PERCENT_INSIDE_MARGINS_WIDTH  = (GLfloat)WIDTH  / ((GLfloat)WIDTH  + (GLfloat)MARGINS*2);
 
 //take note that position can be negative and percent cannot 
-RangeMap xpos     = RangeMap(0, 100, -widthRatio,  widthRatio);
-RangeMap ypos     = RangeMap(0, 100, heightRatio, -heightRatio);
-RangeMap xpercent = RangeMap(0, 100, 0,  2*widthRatio);
-RangeMap ypercent = RangeMap(0, 100, 0,  2*heightRatio);
+RangeMap xposition = RangeMap(0, 100, -PERCENT_INSIDE_MARGINS_WIDTH,      PERCENT_INSIDE_MARGINS_WIDTH);
+RangeMap yposition = RangeMap(0, 100,  PERCENT_INSIDE_MARGINS_HEIGHT,    -PERCENT_INSIDE_MARGINS_HEIGHT);
+RangeMap xpercent  = RangeMap(0, 100,  0,                             2 * PERCENT_INSIDE_MARGINS_WIDTH);
+RangeMap ypercent  = RangeMap(0, 100,  0,                             2 * PERCENT_INSIDE_MARGINS_HEIGHT);
+
+#define SPAWN_ROWS 4
 
 class Grid {
 private:
 	Tile* gridx[COLS+1] = {};
-	Tile* gridy[ROWS+1]    = {};
+	Tile* gridy[ROWS+1] = {};
 	
 public:
-	Tile* board[COLS][ROWS] = {};
+	Tile* spawn[COLS][SPAWN_ROWS] = {};
+	Tile* board[COLS][ROWS]       = {};
 
 	Grid(GLuint vert, GLuint frag);
 	~Grid();
 	void render();
 };
 
+//these magic numbers need fixing
 Grid::Grid(GLuint vert, GLuint frag) {
 	for (GLuint i = 0; i <= ROWS; i++) {
 		gridy[i] = new Tile
-			(xpos.map(0.f),       ypos.map(i * 5.f),
-			 xpercent.map(100.f), ypercent.map(0.5f),
+			(xposition.map(0.f),  yposition.map(i * 10.f/HW_RATIO),
+			 xpercent.map(100.f), ypercent.map(1.f/HW_RATIO),
 			 vert, frag, NONE);
 	}
 
 	for (GLuint i = 0; i <= COLS; i++) {
 		gridx[i] = new Tile
-			(xpos.map(i * 10.f), ypos.map(0.f),
-			 xpercent.map(1.f),  ypercent.map(100.5f),
+			(xposition.map(i * 10.f), yposition.map(0.f/HW_RATIO),
+			 xpercent.map(1.f),       ypercent.map(100.f + 1.f/HW_RATIO), // need to apply extra length to compensate measurement scheme of tile
 			 vert, frag, NONE);
 	}
 }
@@ -87,6 +92,8 @@ Grid::render(){
 	}
 }
 
+//----------------------------------------------------------------------------------------------------------
+
 int
 main() {
 	glfwInit();
@@ -97,7 +104,7 @@ main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT,
+	GLFWwindow* window = glfwCreateWindow(WIDTH + 2*MARGINS, HEIGHT + 2*MARGINS,
 										  "fruit tetris - Lief Swanson",
 										  nullptr, nullptr);
 	glfwMakeContextCurrent(window);
@@ -130,7 +137,7 @@ main() {
 
 	//test.Relocate(-1.f, 1.f);
 	
-	glViewport(0, 0, WIDTH, HEIGHT);
+	glViewport(0, 0, WIDTH + 2*MARGINS, HEIGHT + 2*MARGINS);
 
 	Grid grid = Grid(vBasic, fGrid);
 
