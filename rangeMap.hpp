@@ -3,23 +3,24 @@
 
 #include <GL/glew.h>
 
-// class RangeMap {
+class RangeMap {
 
-// private:
-// 	GLfloat inLow,  inHigh;
-// 	GLfloat outLow, outHigh;
+private:
+	GLfloat inOffset, outOffset;
+	GLfloat ratio;
 	
-// public:
-// 	RangeMap(GLfloat inLow,  GLfloat inHigh,
-// 			 GLfloat outLow, GLfloat outHigh);
+public:
+	RangeMap(GLfloat inLow,  GLfloat inHigh,
+			 GLfloat outLow, GLfloat outHigh);
+	~RangeMap();
 	
-// 	GLfloat
-// 	map(GLfloat x);
-// };
-
 	GLfloat
-	mapTo(GLfloat inLow,  GLfloat inHigh,
-		GLfloat outLow, GLfloat outHigh,
-		GLfloat x);
+	map(GLfloat x);
+};
+
+GLfloat
+mapTo(GLfloat inLow,  GLfloat inHigh,
+	  GLfloat outLow, GLfloat outHigh,
+	  GLfloat x);
 
 #endif // __MAP_HPP__

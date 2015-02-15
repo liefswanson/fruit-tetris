@@ -24,6 +24,9 @@ Block::Block(GLfloat x, GLfloat y,
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
 
+	glDetachShader(shader, vert);
+	glDetachShader(shader, frag);
+
 	GLfloat vertices[] = {
 		w,    0.f,  // tr
 		w,   -h,    // br
