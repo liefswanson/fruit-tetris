@@ -13,7 +13,7 @@ readCompile(const GLchar* path, GLuint type) {
 		temp << file.rdbuf();
 		file.close();
 		source = temp.str();
-		
+
 	} catch(exception e) {
 		cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ " << path << endl;
 	}

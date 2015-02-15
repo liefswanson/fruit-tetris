@@ -7,12 +7,13 @@
 
 #define UNBIND  0
 
-#define APPLE   0
-#define BANANA  1
-#define GRAPE   2
-#define PEAR    3
-#define ORANGE  4
+#define NONE    0
 
+#define APPLE   1
+#define BANANA  2
+#define GRAPE   3
+#define PEAR    4
+#define ORANGE  5
 
 class Tile {
 	
@@ -30,9 +31,9 @@ private:
 	
 public:
 	Tile(GLfloat x, GLfloat y,
-		  GLfloat h, GLfloat w,
-		  GLuint vert, GLuint frag,
-		  GLuint fruit);
+		 GLfloat h, GLfloat w,
+		 GLuint vert, GLuint frag,
+		 GLuint fruit);
 	~Tile();
 
 	void
