@@ -1,12 +1,12 @@
-#include "block.hpp"
+#include "tile.hpp"
 
 GLuint
-Block::indices[] = {
+Tile::indices[] = {
 	0, 1, 3,
 	1, 2, 3
 };
 
-Block::Block(GLfloat x, GLfloat y,
+Tile::Tile(GLfloat x, GLfloat y,
 			 GLfloat w, GLfloat h,
 			 GLuint vert, GLuint frag,
 			 GLuint fruit){
@@ -61,17 +61,17 @@ Block::Block(GLfloat x, GLfloat y,
 	Relocate(x, y);
 }
 
-Block::~Block(){}
+Tile::~Tile(){}
 
 void
-Block::Relocate(GLfloat x, GLfloat y) {
+Tile::Relocate(GLfloat x, GLfloat y) {
 	glUseProgram(shader);
 	GLint vertPos = glGetUniformLocation(shader, "position");
 	glUniform2f(vertPos, x, y);
 }
 
 void
-Block::Render() {
+Tile::Render() {
 	glUseProgram(shader);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

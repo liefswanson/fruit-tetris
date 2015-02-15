@@ -2,7 +2,7 @@
 #include <fstream>
 #include <unistd.h>
 
-#include "block.hpp"
+#include "tile.hpp"
 #include "shader.hpp"
 
 // GLEW
@@ -59,7 +59,7 @@ int main() {
 	//GLuint fGrid    = readCompile("grid.frag",    GL_FRAGMENT_SHADER);
 
 
-	Block test = Block(0.f, 0.f,
+	Tile test = Tile(0.f, 0.f,
 					   0.4f, 0.4f,
 					   vert, fPear,
 					   PEAR);
