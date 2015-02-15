@@ -15,7 +15,7 @@
 using namespace std;
 
 const GLuint WIDTH  = 800,
-	         HEIGHT = 600;
+	         HEIGHT = 800;
 
 const GLfloat BG = 0.082f;
 
@@ -50,7 +50,7 @@ int main() {
 	GLuint vert     = readCompile("basic.vert",   GL_VERTEX_SHADER);
 	
 	//GLuint fApple   = readCompile("apple.frag",   GL_FRAGMENT_SHADER);
-	//GLuint fBannana = readCompile("bannana.frag", GL_FRAGMENT_SHADER);
+	//GLuint fBannana = readCompile("banana.frag", GL_FRAGMENT_SHADER);
 	//GLuint fGrape   = readCompile("grape.frag",   GL_FRAGMENT_SHADER);
 	GLuint fPear    = readCompile("pear.frag",    GL_FRAGMENT_SHADER);
 	//GLuint fOrange  = readCompile("orange.frag",  GL_FRAGMENT_SHADER);
@@ -60,12 +60,14 @@ int main() {
 
 
 	Block test = Block(0.f, 0.f,
-					   0.4f, 0.8f,
+					   0.4f, 0.4f,
 					   vert, fPear,
-					   APPLE);
+					   PEAR);
 	//test.Relocate(-1.f, -1.f);
 	
 	glViewport(0, 0, WIDTH, HEIGHT);
+
+	test.Relocate(-1.f, 1.f);
 
 	while(!glfwWindowShouldClose(window)){
 		glfwPollEvents();
@@ -73,7 +75,6 @@ int main() {
 		glClearColor(BG, BG, BG, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		test.Relocate(-0.6f, -0.6f);
 		test.Render();
 		
 		glfwSwapBuffers(window);

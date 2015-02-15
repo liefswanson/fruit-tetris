@@ -8,7 +8,7 @@
 #define UNBIND  0
 
 #define APPLE   0
-#define BANNANA 1
+#define BANANA  1
 #define GRAPE   2
 #define PEAR    3
 #define ORANGE  4

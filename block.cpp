@@ -24,12 +24,6 @@ Block::Block(GLfloat x, GLfloat y,
 		0.f,  0.f   // tl
 	};
 
-	//Shader shader = Shader();
-	//GLuint temp = shader.ref();
-	//shader.Attach(vert);
-	//shader.Attach(frag);
-	//shader.Link();
-
 	shader = glCreateProgram();
 	glAttachShader(shader, vert);
 	glAttachShader(shader, frag);
