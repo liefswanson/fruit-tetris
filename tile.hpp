@@ -15,7 +15,7 @@
 #define PEAR    4
 #define ORANGE  5
 
-class Tile {
+class Quad {
 	
 private:
 	static
@@ -26,15 +26,14 @@ private:
 	GLfloat w, h;
 
 	GLuint shader;
-	
-	GLuint _fruit;
+
+protected:
 	
 public:
-	Tile(GLfloat x, GLfloat y,
+	Quad(GLfloat x, GLfloat y,
 		 GLfloat h, GLfloat w,
-		 GLuint vert, GLuint frag,
-		 GLuint fruit);
-	~Tile();
+		 GLuint vert, GLuint frag);
+	~Quad();
 
 	void
 	Relocate(GLfloat x, GLfloat y);
@@ -44,6 +43,20 @@ public:
 
 	GLuint
 	fruit();
+};
+
+class Tile: public Quad {
+
+private:
+	GLuint _fruit;
+	static GLuint fruits[];
+
+public:
+	Tile();
+	~Tile();
+
+	GLboolean
+	initTiles();
 };
 
 #endif  //__TILE_HPP__

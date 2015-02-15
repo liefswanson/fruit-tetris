@@ -123,8 +123,8 @@ main() {
 
 	GLuint vBasic   = readCompile("shaders/basic.vert",   GL_VERTEX_SHADER);
 	
-	//GLuint fApple   = readCompile("shaders/apple.frag",   GL_FRAGMENT_SHADER);
-	//GLuint fBannana = readCompile("shaders/banana.frag",  GL_FRAGMENT_SHADER);
+	//GLuint fApple   = ;
+	//GLuint fBannana = ;
 	//GLuint fGrape   = readCompile("shaders/grape.frag",   GL_FRAGMENT_SHADER);
 	//GLuint fPear    = readCompile("shaders/pear.frag",    GL_FRAGMENT_SHADER);
 	//GLuint fOrange  = readCompile("shaders/orange.frag",  GL_FRAGMENT_SHADER);
