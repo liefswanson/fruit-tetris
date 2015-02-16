@@ -15,8 +15,6 @@ private:
 	RangeMap* xpercent;
 	RangeMap* ypercent;
 	
-	GLfloat hwRatio;
-	
 	GLuint spawnRows;
 	GLuint rows;
 	GLuint cols;
@@ -32,8 +30,10 @@ public:
 
 	// returns occupant of position (row, column), or NULL if empty
 	Tile*     at(GLuint row, GLuint col);
+	Tile*     makeAt(GLuint row, GLuint col, GLfloat vert, GLfloat frag, GLuint fruit);
 	GLboolean set(GLuint row, GLuint col, Tile* val);
-
+	
+	
 	GLboolean      canMoveD(GLuint row, GLuint col);
 	GLboolean      canMoveL(GLuint row, GLuint col);
 	GLboolean      canMoveR(GLuint row, GLuint col);

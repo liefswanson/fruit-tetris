@@ -147,20 +147,12 @@ main() {
 	Grid grid (vBasic, fGrid);
 	Board board (ROWS, COLS, SPAWN_ROWS, PERCENT_INSIDE_MARGINS_HEIGHT, PERCENT_INSIDE_MARGINS_WIDTH, HW_RATIO);
 
-	Tile* in = new Tile(0,0,
-						xpercent.map(10.f), ypercent.map(5.f),
-						vBasic, fPear,
-						PEAR);
+	board.makeAt(4,0,vBasic,fPear,PEAR);
+	board.makeAt(5,0,vBasic,fApple,APPLE);
 
-	board.set(SPAWN_ROWS,0, in);
-
-
-	Tile* in2 = new Tile(0,0,
-						xpercent.map(10.f), ypercent.map(5.f),
-						vBasic, fApple,
-						APPLE);
-
-	board.set(SPAWN_ROWS + 1,1, in2);
+	board.makeAt(6,0,vBasic,fGrape,GRAPE);
+	board.makeAt(7,0,vBasic,fOrange,ORANGE);
+	board.makeAt(8,0,vBasic,fBanana,BANANA);
 
 	while (!glfwWindowShouldClose(window)){
 		glfwPollEvents();
@@ -172,7 +164,6 @@ main() {
 		grid.Render();
 		
 		glfwSwapBuffers(window);
-		//break;
 	}
 
 	glfwTerminate(); 

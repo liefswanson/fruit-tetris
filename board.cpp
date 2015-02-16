@@ -17,8 +17,6 @@ Board::Board(GLuint rows, GLuint cols, GLuint spawnRows,
 	yposition = new RangeMap(0, 100,  percentInsideMarginsHeight,    -percentInsideMarginsHeight);
 	xpercent  = new RangeMap(0, 100,  0,                          2 * percentInsideMarginsWidth);
 	ypercent  = new RangeMap(0, 100,  0,                          2 * percentInsideMarginsHeight);
-
-	this->hwRatio = hwRatio; 
 }
 
 Board::~Board() {
@@ -37,9 +35,26 @@ Board::~Board() {
 Tile*
 Board::at(GLuint row, GLuint col) {
 	if (row > rows || col > cols ) {
+		std::cout << "tried to get outside grid " << row << ' ' << col << std::endl;
 		return NULL;
 	}
 	return board[cols*row + col];
+}
+
+Tile*
+Board::makeAt(GLuint row, GLuint col, GLfloat vert, GLfloat frag, GLuint fruit){
+	auto temp = at(row, col);
+	if (temp == NULL) {
+		set(row, col,
+			new Tile(0,0,
+					 xpercent->map(100.f/cols),
+					 ypercent->map(100.f/rows),
+					 vert, frag, fruit));
+		return at(row, col);
+	} else {
+		std::cout << "tried to place outside grid " << row << ' ' << col << std::endl;
+		return NULL;	
+	} 
 }
 
 GLboolean
@@ -98,8 +113,8 @@ Board::Render() {
 			Tile* current = this->at(row, col);
 			if (current != NULL) {
 				//FIXME screen size hack pass in real values
-				std::cout << row << ' ' <<col  << std::endl;
-				current->Relocate(xposition->map((row - spawnRows) * 10.f), yposition->map(col * 5.f));
+				//std::cout << row << ' ' << col  << std::endl;
+				current->Relocate(xposition->map(col * 100.f/cols), yposition->map((row - spawnRows) * 100.f/rows));
 				current->Render();
 			}
 		}
