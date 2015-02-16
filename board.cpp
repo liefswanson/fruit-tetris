@@ -6,18 +6,23 @@ Board::Board(GLuint rows, GLuint cols, GLuint spawnRows) {
 	this->spawnRows = spawnRows;
 
 	board = new Tile* [cols*(rows+spawnRows)];
+
+	for (GLuint i = 0; i < cols*(rows+spawnRows); ++i) {
+		board[i] = NULL;
+	}
+	
 }
 
 Board::~Board() {
-	for (GLuint c = 0; c < rows; ++c) {
-		for (GLuint r = 0; r < rows; ++r) {
-			Tile* current = this->at(r,c);
-			if (current != NULL){
-				delete current;
-			}
-		}
-	}
-	delete[] board;
+	// for (GLuint c = 0; c < rows; ++c) {
+	// 	for (GLuint r = 0; r < rows; ++r) {
+	// 		Tile* current = this->at(r,c);
+	// 		if (current != NULL){
+	// 			delete current;
+	// 		}
+	// 	}
+	// }
+	// delete[] board;
 }
 
 Tile*
@@ -25,7 +30,6 @@ Board::at(GLuint row, GLuint col) {
 	if (row > rows || col > cols ) {
 		return NULL;
 	}
-	
 	return board[cols*row + col];
 }
 
@@ -45,6 +49,7 @@ Board::Render() {
 			Tile* current = this->at(row, col);
 			if (current != NULL) {
 				//FIXME screen size hack pass in real values
+				//std::cout << row << ' ' <<col  << std::endl;
 				current->Relocate(col * 5.f, (row - spawnRows) * 10.f);
 				current->Render();
 			}

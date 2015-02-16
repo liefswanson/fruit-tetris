@@ -137,31 +137,28 @@ main() {
 	Grid grid = Grid(vBasic, fGrid);
 	Board board = Board(ROWS, COLS, SPAWN_ROWS);
 
-	//Quad* temp = new Quad(0,0,xpercent.map(10.f), ypercent.map(5.f),vBasic,fApple);
-	
 	Tile* in = new Tile(0,0,
 						xpercent.map(10.f), ypercent.map(5.f),
 						vBasic, fPear,
 						PEAR);
-	//delete in;
-   
-	bool test = false;
-	if (!board.set(SPAWN_ROWS,0, in)) {
-		test = true;
-		std::cout << "failed to set" << std::endl;
-	}
-		
+
+	if (board.set(SPAWN_ROWS,0, in)) {
+		std::cout << "set" << std::endl;
+	} else {
+		std::cout << "not set" << std::endl;
+	} 
+
 	while (!glfwWindowShouldClose(window)){
 		glfwPollEvents();
 
 		glClearColor(BG, BG, BG, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//in->Render();
 		board.Render();
 		grid.Render();
 		
 		glfwSwapBuffers(window);
+		//break;
 	}
 
 	glfwTerminate(); 
