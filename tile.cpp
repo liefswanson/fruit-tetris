@@ -1,14 +1,15 @@
 #include "tile.hpp"
 
 GLuint
-Quad::indices[] = {
+Tile::indices[] = {
 	0, 1, 3,
 	1, 2, 3
 };
 
-Quad::Quad(GLfloat x, GLfloat y,
-			 GLfloat w, GLfloat h,
-			 GLuint vert, GLuint frag){
+Tile::Tile(GLfloat x, GLfloat y,
+		   GLfloat w, GLfloat h,
+		   GLuint vert, GLuint frag,
+		   GLuint fruit){
 	
 	shader = glCreateProgram();
 	glAttachShader(shader, vert);
@@ -55,29 +56,42 @@ Quad::Quad(GLfloat x, GLfloat y,
 
     this->w = w;
 	this->h = h;
-	//_fruit = fruit;
 
 	Relocate(x, y);
+	_fruit = fruit;
 }
 
-Quad::~Quad(){}
+Tile::Tile(const Tile& that){
+	this->w = that.w;
+	this->h = that.h;
+
+	this->VAO = that.VAO;
+	this->VBO = that.VBO;
+	this->EBO = that.EBO;
+
+	this->shader = that.shader;
+	_fruit = that._fruit;
+}
+
+Tile::~Tile(){
+	//glDeleteProgram(shader);
+	//glDeleteBuffers(1, &VBO);
+	//glDeleteBuffers(1, &EBO);
+	//glDeleteVertexArrays(1, &VAO);
+
+}
 
 void
-Quad::Relocate(GLfloat x, GLfloat y) {
+Tile::Relocate(GLfloat x, GLfloat y) {
 	glUseProgram(shader);
 	GLint vertPos = glGetUniformLocation(shader, "position");
 	glUniform2f(vertPos, x, y);
 }
 
 void
-Quad::Render() {
+Tile::Render() {
 	glUseProgram(shader);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(UNBIND);
-}
-
-
-Tile::Tile(w, h, fruit) : Quad(0, 0, w, h, this->vert(fruit), this->frag(fruit)){
-	
 }

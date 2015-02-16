@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 #include <memory>
-#include "shader.hpp"
+#include <iostream>
 
 #define UNBIND  0
 
@@ -15,48 +15,44 @@
 #define PEAR    4
 #define ORANGE  5
 
-class Quad {
+// this is an abstraction used to render rectangles by height width and (x, y) position 
+class Tile {
 	
 private:
+	// for initializing each rectangle's ebo
 	static
 	GLuint indices[];
 
 	GLuint VAO, VBO, EBO;
 
+	// height and width
+	// x and y are used 
 	GLfloat w, h;
 
+	// shader to use when rendering this rectangle
+	// each rectangle only has one shader, and each shader only has one rectangle
 	GLuint shader;
 
-protected:
-	
-public:
-	Quad(GLfloat x, GLfloat y,
-		 GLfloat h, GLfloat w,
-		 GLuint vert, GLuint frag);
-	~Quad();
+	GLuint _fruit;
 
+	// observe the type of the fruit
+	GLuint
+	fruit();
+
+public:
+	Tile(GLfloat x, GLfloat y,
+		 GLfloat h, GLfloat w,
+		 GLuint vert, GLuint frag,
+		 GLuint fruit);
+	Tile(const Tile &that);
+	~Tile();
+
+	// sends info to shader about how to move this rectangle's position
 	void
 	Relocate(GLfloat x, GLfloat y);
 
 	void
 	Render();
-
-	GLuint
-	fruit();
-};
-
-class Tile: public Quad {
-
-private:
-	GLuint _fruit;
-	static GLuint fruits[];
-
-public:
-	Tile();
-	~Tile();
-
-	GLboolean
-	initTiles();
 };
 
 #endif  //__TILE_HPP__

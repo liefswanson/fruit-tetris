@@ -17,6 +17,7 @@ Board::~Board() {
 			}
 		}
 	}
+	delete[] board;
 }
 
 Tile*
@@ -26,6 +27,15 @@ Board::at(GLuint row, GLuint col) {
 	}
 	
 	return board[cols*row + col];
+}
+
+GLboolean
+Board::set(GLuint row, GLuint col, Tile* val) {
+	if (at(row, col) != NULL ) {
+		return GL_FALSE;
+	}
+	board[cols*row + col] = val;
+	return GL_TRUE;
 }
 
 void
