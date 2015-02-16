@@ -1,6 +1,8 @@
 #include "board.hpp"
 
-Board::Board(GLuint rows, GLuint cols, GLuint spawnRows) {
+Board::Board(GLuint rows, GLuint cols, GLuint spawnRows,
+			 GLfloat percentInsideMarginsHeight, GLfloat percentInsideMarginsWidth,
+			 GLfloat hwRatio) {
 	this->rows      = rows;
 	this->cols      = cols;
 	this->spawnRows = spawnRows;
@@ -10,19 +12,26 @@ Board::Board(GLuint rows, GLuint cols, GLuint spawnRows) {
 	for (GLuint i = 0; i < cols*(rows+spawnRows); ++i) {
 		board[i] = NULL;
 	}
-	
+
+	xposition = new RangeMap(0, 100, -percentInsideMarginsWidth,      percentInsideMarginsWidth);
+	yposition = new RangeMap(0, 100,  percentInsideMarginsHeight,    -percentInsideMarginsHeight);
+	xpercent  = new RangeMap(0, 100,  0,                          2 * percentInsideMarginsWidth);
+	ypercent  = new RangeMap(0, 100,  0,                          2 * percentInsideMarginsHeight);
+
+	this->hwRatio = hwRatio; 
 }
 
 Board::~Board() {
-	// for (GLuint c = 0; c < rows; ++c) {
-	// 	for (GLuint r = 0; r < rows; ++r) {
-	// 		Tile* current = this->at(r,c);
-	// 		if (current != NULL){
-	// 			delete current;
-	// 		}
-	// 	}
-	// }
-	// delete[] board;
+	for (GLuint i = 0; i < cols*(rows + spawnRows); ++i) {
+		if (board[i] != NULL){
+			delete board[i];
+		}
+	}
+	delete[] board;
+	delete xposition;
+	delete xpercent;
+	delete yposition;
+	delete ypercent;
 }
 
 Tile*
@@ -42,6 +51,46 @@ Board::set(GLuint row, GLuint col, Tile* val) {
 	return GL_TRUE;
 }
 
+GLboolean
+Board::canMoveD(GLuint row, GLuint col) {
+	return GL_TRUE;
+
+}
+
+
+GLboolean
+Board::canMoveL(GLuint row, GLuint col) {
+	return GL_TRUE;
+
+}
+
+
+GLboolean
+Board::canMoveR(GLuint row, GLuint col) {
+	return GL_TRUE;
+	
+}
+
+
+void
+Board::moveD(GLuint row, GLuint col) {
+	
+}
+
+
+
+void
+Board::moveL(GLuint row, GLuint col) {
+	
+}
+
+
+void
+Board::moveR(GLuint row, GLuint col) {
+	
+}
+
+
 void
 Board::Render() {
 	for (GLuint col = 0; col < cols; ++col) {
@@ -49,8 +98,8 @@ Board::Render() {
 			Tile* current = this->at(row, col);
 			if (current != NULL) {
 				//FIXME screen size hack pass in real values
-				//std::cout << row << ' ' <<col  << std::endl;
-				current->Relocate(col * 5.f, (row - spawnRows) * 10.f);
+				std::cout << row << ' ' <<col  << std::endl;
+				current->Relocate(xposition->map((row - spawnRows) * 10.f), yposition->map(col * 5.f));
 				current->Render();
 			}
 		}

@@ -16,8 +16,8 @@
 
 using namespace std;
 
-const GLuint HEIGHT = 1000,
-	         WIDTH  = 500;
+const GLuint HEIGHT = 600,
+	         WIDTH  = 300;
 
 const GLfloat HW_RATIO = (GLfloat)HEIGHT/
 	                     (GLfloat)WIDTH;
@@ -95,6 +95,14 @@ Grid::Render(){
 
 //-------------------------------------------------------------------------------------------------
 
+
+void
+key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+    std::cout << key << std::endl;
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+}
+
 int
 main() {
 	glfwInit();
@@ -122,6 +130,8 @@ main() {
 		return -1;
     }
 
+	glfwSetKeyCallback(window, key_callback);
+
 	GLuint vBasic   = readCompile("shaders/basic.vert",   GL_VERTEX_SHADER);
 	
 	GLuint fApple   = readCompile("shaders/apple.frag",   GL_FRAGMENT_SHADER);
@@ -134,19 +144,23 @@ main() {
 
 	glViewport(0, 0, WIDTH + 2*MARGINS, HEIGHT + 2*MARGINS);
 
-	Grid grid = Grid(vBasic, fGrid);
-	Board board = Board(ROWS, COLS, SPAWN_ROWS);
+	Grid grid (vBasic, fGrid);
+	Board board (ROWS, COLS, SPAWN_ROWS, PERCENT_INSIDE_MARGINS_HEIGHT, PERCENT_INSIDE_MARGINS_WIDTH, HW_RATIO);
 
 	Tile* in = new Tile(0,0,
 						xpercent.map(10.f), ypercent.map(5.f),
 						vBasic, fPear,
 						PEAR);
 
-	if (board.set(SPAWN_ROWS,0, in)) {
-		std::cout << "set" << std::endl;
-	} else {
-		std::cout << "not set" << std::endl;
-	} 
+	board.set(SPAWN_ROWS,0, in);
+
+
+	Tile* in2 = new Tile(0,0,
+						xpercent.map(10.f), ypercent.map(5.f),
+						vBasic, fApple,
+						APPLE);
+
+	board.set(SPAWN_ROWS + 1,1, in2);
 
 	while (!glfwWindowShouldClose(window)){
 		glfwPollEvents();
