@@ -44,9 +44,9 @@ Block::checkMove() {
 	GLboolean temp = GL_TRUE;
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
 		for(GLuint col = 0; col < PIECE_SIZE; ++col) {
-			if(piece[row][col] != NULL) {
+			// if(piece[row][col] != NULL) {
 				board->set(row +rowDelta, col +colDelta, NULL);
-			}
+			// }
 		}
 	}
 
@@ -63,9 +63,9 @@ Block::checkMove() {
 	
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
 		for(GLuint col = 0; col < PIECE_SIZE; ++col) {
-			if(piece[row][col] != NULL) {
+			// if(piece[row][col] != NULL) {
 				board->set(row +rowDelta, col +colDelta, piece[row][col]);
-			}
+			// }
 		}
 	}
 	if(temp) {
