@@ -1,7 +1,7 @@
 libs = -lGLEW -lglfw -lGL -lX11 -lpthread #-lXrandr -lXi
 flags = -Wall -g
 std = -std=c++11
-cc = clang++
+cc = g++
 exe = fruit-tetris
 
 all: main.o tile.o shader.o rangeMap.o board.o block.o
@@ -19,8 +19,8 @@ shader.o: shader.cpp
 rangeMap.o: rangeMap.cpp 
 	$(cc) $(std) $(flags) -c rangeMap.cpp -o rangeMap.o
 
-board.o: board.cpp tile.o
-	$(cc) $(std) $(flags) -c tile.o board.cpp -o board.o
+board.o: board.cpp
+	$(cc) $(std) $(flags) -c board.cpp -o board.o
 
 block.o: block.cpp
 	$(cc) $(std) $(flags) -c block.cpp -o block.o

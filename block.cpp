@@ -245,7 +245,7 @@ Block::randFruit(){
 
 void
 Block::clear(){
-	// FIXME for testing so i can see the block
+	// for testing so i can see the block
 	// rowDeltaPiece = 10;
 	rowDeltaPiece = 0;
 	colDeltaPiece = rand() % (board->Cols() -PIECE_SIZE -1);

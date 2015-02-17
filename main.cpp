@@ -66,9 +66,10 @@ Grid::Grid(GLuint vert, GLuint frag) {
 	}
 
 	for (GLuint i = 0; i <= COLS; i++) {
+		// need to apply extra length to compensate measurement scheme of tiles
 		gridx[i] = new Tile
 			(xposition.map(i * 10.f), yposition.map(0.f/HW_RATIO),
-			 xpercent.map(1.f),       ypercent.map(100.f + 1.f/HW_RATIO), // need to apply extra length to compensate measurement scheme of tile
+			 xpercent.map(1.f),       ypercent.map(100.f + 1.f/HW_RATIO), 
 			 vert, frag, NONE);
 	}
 }
@@ -121,20 +122,23 @@ key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 			}
 			break;
 		case GLFW_KEY_SPACE:
-			// TODO shuffle fruits
+			
 			if(mods == GLFW_MOD_SHIFT) {
 				globalBlock->shuffleL();
 			} else {
 				globalBlock->shuffleR();
 			}
 			break;
+
 		case GLFW_KEY_DOWN:
+
 			if(globalBlock->canMoveD()) {
 				globalBlock->applyMove();	
 			} else {
 				globalBlock->discardMove();	
 			}
 			break;
+
 		case GLFW_KEY_UP:
 			if(mods == GLFW_MOD_SHIFT) {
 				if(globalBlock->canRotC()) {
@@ -184,7 +188,7 @@ main(int argc, char *argv[]) {
 
 	glfwSetKeyCallback(window, key_callback);
 
-	GLuint vBasic   = readCompile("shaders/basic.vert",   GL_VERTEX_SHADER);
+	GLuint vBasic  = readCompile("shaders/basic.vert",   GL_VERTEX_SHADER);
 	
 	GLuint frags[6];
 	frags[NONE]    = NONE;
@@ -194,7 +198,7 @@ main(int argc, char *argv[]) {
 	frags[PEAR]    = readCompile("shaders/pear.frag",    GL_FRAGMENT_SHADER);
 	frags[ORANGE]  = readCompile("shaders/orange.frag",  GL_FRAGMENT_SHADER);
 
-	GLuint fGrid    = readCompile("shaders/grid.frag",    GL_FRAGMENT_SHADER);
+	GLuint fGrid   = readCompile("shaders/grid.frag",    GL_FRAGMENT_SHADER);
 
 	glViewport(0, 0, WIDTH + 2*MARGINS, HEIGHT + 2*MARGINS);
 
