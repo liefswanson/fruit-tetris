@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include <cstdlib>
+#include <algorithm>
 #include "board.hpp"
 #include "tile.hpp"
 
@@ -12,7 +13,8 @@
 
 #define SHAPES   3
 
-#define PIECE_SIZE 5
+#define PIECE_SIZE      5
+#define TILES_PER_BLOCK 4
 // used to give the player a way to control the pieces falling from the top of the board
 // all this does is control where the tiles are located on the board until they can no longer move
 class Block {
@@ -25,6 +27,9 @@ private:
 
 	Tile* piece[PIECE_SIZE][PIECE_SIZE] = {};
 	Tile* check[PIECE_SIZE][PIECE_SIZE] = {};
+
+	Tile* orderPiece[4] = {};
+	Tile* orderCheck[4] = {};
 
 	GLuint frags[6];
 
@@ -78,6 +83,8 @@ public:
 	GLboolean canMoveR();
 	GLboolean canMoveD();
 
+	void shuffleL();
+	void shuffleR();
 };
 
 

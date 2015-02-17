@@ -4,7 +4,6 @@ Block::Block(Board* board, GLuint frags[], GLuint vert){
 	srand(time(NULL));
 	this->board = board;
 	this->vert = vert;
-	// FIXME magic number
 	for(GLuint i = 0; i < FRUITS; ++i) {
 		this->frags[i] = frags[i];
 	}
@@ -19,10 +18,10 @@ Block::~Block(){
 void
 Block::applyMove(){
 	pop();
-	debugBoard();
+	// debugBoard();
 	syncPiece();
 	push();
-	debugBoard();
+	// debugBoard();
 }
 
 void
@@ -34,7 +33,7 @@ GLboolean
 Block::checkMove() {
 	GLboolean temp = GL_TRUE;
 	pop();
-	debugBoard();
+	// debugBoard();
 
 	
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
@@ -48,19 +47,17 @@ Block::checkMove() {
 		}
 	}
 	push();
-	debugBoard();
+	// debugBoard();
 	
-	if(temp) {
-		std::cout << "legal move" << std::endl;
-	} else {
-		std::cout << "illegal move" << std::endl;
-	}
+	// if(temp) {
+	// 	std::cout << "legal move" << std::endl;
+	// } else {
+	// 	std::cout << "illegal move" << std::endl;
+	// }
 	return temp;
 }
 
 
-// FIXME possible issue with the order of sync
-// use function instead
 GLboolean
 Block::canRotW(){
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
@@ -102,76 +99,25 @@ Block::canMoveD(){
 	return checkMove();
 }
 
-GLuint
-Block::randFruit(){
-	return (rand() % (FRUITS -1)) +1;
+void
+Block::shuffleL() {
+	//uses a single bubble ->
+	for(GLuint i = 0; i < TILES_PER_BLOCK-1; ++i) {
+		std::swap(*orderPiece[i], *orderPiece[i +1]);
+	}
+	syncCheck();
 }
 
 void
-Block::makeI(){
-    //
-	//
-	// ++++
-	//
-	//
-    //0..3, 2
-
-	std::cout << 'I' << std::endl;
-	GLuint fruit;
-	fruit = randFruit();
-	piece[0][2] = board->makeAt(0 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	fruit = randFruit();
-	piece[1][2] = board->makeAt(1 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	fruit = randFruit();
-	piece[2][2] = board->makeAt(2 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	fruit = randFruit();
-	piece[3][2] = board->makeAt(3 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+Block::shuffleR(){
+	//uses a single bubble <-
+	for(GLuint i = TILES_PER_BLOCK-1; i > 0 ; --i) {
+	 	std::swap(*orderPiece[i],*orderPiece[i -1]);
+	}
+	syncCheck();
 }
 
-void
-Block::makeL(){
-	//
-	//
-	// +++
-	// +
-	//
-    //1, 3
-	//1..3, 2
-
-	std::cout << 'L' << std::endl;
-	GLuint fruit;
-	fruit = randFruit();
-	piece[1][3] = board->makeAt(1 +rowDeltaPiece, 3 +colDeltaPiece, vert, frags[fruit], fruit);
-	fruit = randFruit();
-	piece[1][2] = board->makeAt(1 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	fruit = randFruit();
-	piece[2][2] = board->makeAt(2 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	fruit = randFruit();
-	piece[3][2] = board->makeAt(3 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-}
-
-void
-Block::makeS(){
-	//
-	//
-	//  ++
-	// ++
-	// 
-    //1..2, 3
-	//2..3, 2
-
-
-	std::cout << 'S' << std::endl;
-	GLuint fruit;
-	fruit = randFruit();
-	piece[1][3] = board->makeAt(1 +rowDeltaPiece, 3 +colDeltaPiece, vert, frags[fruit], fruit);
-	fruit = randFruit();
-	piece[2][3] = board->makeAt(2 +rowDeltaPiece, 3 +colDeltaPiece, vert, frags[fruit], fruit);
-	fruit = randFruit();
-	piece[2][2] = board->makeAt(2 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	fruit = randFruit();
-	piece[3][2] = board->makeAt(3 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-}
+//-------------------------------------------------------------------------------------------------
 
 void
 Block::makeBlock(){
@@ -189,47 +135,170 @@ Block::makeBlock(){
 		makeS();
 		break;
 	}
+
+	syncCheck();
+	
+	GLuint rotations = rand() % 4;
+	std::cout << rotations  << " rotations on new block" << std::endl;
+	for(GLuint i = 0; i < rotations; ++i) {
+		canRotW();
+		applyMove();
+	}
 }
+
+void
+Block::makeI(){
+    //
+	//
+	// ++++
+	//
+	//
+    //0..3, 2
+
+	std::cout << 'I' << std::endl;
+	GLuint fruit;
+	fruit = randFruit();
+	piece[0][2] = board->makeAt(0 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[0] = piece[0][2];
+
+	fruit = randFruit();
+	piece[1][2] = board->makeAt(1 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[1] = piece[1][2];
+
+	fruit = randFruit();
+	piece[2][2] = board->makeAt(2 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[2] = piece[2][2];
+
+	fruit = randFruit();
+	piece[3][2] = board->makeAt(3 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[3] = piece[3][2];
+
+	
+}
+
+void
+Block::makeL(){
+	//
+	//
+	// +++
+	// +
+	//
+    //1, 3
+	//1..3, 2
+
+	std::cout << 'L' << std::endl;
+	GLuint fruit;
+	fruit = randFruit();
+	piece[1][3] = board->makeAt(1 +rowDeltaPiece, 3 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[0] = piece[1][3];
+
+	fruit = randFruit();
+	piece[1][2] = board->makeAt(1 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[1] = piece[1][2];
+
+	fruit = randFruit();
+	piece[2][2] = board->makeAt(2 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[2] = piece[2][2];
+
+	fruit = randFruit();
+	piece[3][2] = board->makeAt(3 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[3] = piece[3][2];
+}
+
+void
+Block::makeS(){
+	//
+	//
+	//  ++
+	// ++
+	// 
+    //1..2, 3
+	//2..3, 2
+
+
+	std::cout << 'S' << std::endl;
+	GLuint fruit;
+	fruit = randFruit();
+	piece[1][3] = board->makeAt(1 +rowDeltaPiece, 3 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[0] = piece[1][3];
+
+	fruit = randFruit();
+	piece[2][3] = board->makeAt(2 +rowDeltaPiece, 3 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[1] = piece[2][3];
+
+	fruit = randFruit();
+	piece[2][2] = board->makeAt(2 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[2] = piece[2][2];
+
+	fruit = randFruit();
+	piece[3][2] = board->makeAt(3 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
+	orderPiece[3] = piece[3][2];
+}
+
+GLuint
+Block::randFruit(){
+	return (rand() % (FRUITS -1)) +1;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 
 void
 Block::clear(){
 	// FIXME for testing so i can see the block
-	rowDeltaPiece = 10;
+	// rowDeltaPiece = 10;
+	rowDeltaPiece = 0;
 	colDeltaPiece = rand() % (board->Cols() -PIECE_SIZE -1);
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
 		for(GLuint col = 0; col < PIECE_SIZE; ++col) {
 			piece[row][col] = NULL;
 		}
 	}
+
+	for(GLuint i = 0; i < TILES_PER_BLOCK; ++i) {
+		orderPiece[i] = NULL;
+	}
+
 	syncCheck();
 }
 
 void
 Block::syncPiece(){
-	std::cout << "sync piece" << std::endl;
+	// std::cout << "sync piece" << std::endl;
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
 		for(GLuint col = 0; col < PIECE_SIZE; ++col) {
 			piece[row][col] = check[row][col];
 		}
 	}
+
+	for(GLuint i = 0; i < TILES_PER_BLOCK; ++i) {
+		orderPiece[i] = orderCheck[i];
+	}
+	
 	rowDeltaPiece = rowDeltaCheck;
 	colDeltaPiece = colDeltaCheck;
 }
 
 void
 Block::syncCheck(){
+	// std::cout << "sync check" << std::endl;
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
 		for(GLuint col = 0; col < PIECE_SIZE; ++col) {
 			check[row][col] = piece[row][col] ;
 		}
 	}
+
+	for(GLuint i = 0; i < TILES_PER_BLOCK; ++i) {
+		orderCheck[i] = orderPiece[i];
+	}
+	
 	rowDeltaCheck = rowDeltaPiece;
 	colDeltaCheck = colDeltaPiece;
 }
 
 void
 Block::push(){
-	std::cout << "push piece" << std::endl;
+	// std::cout << "push piece" << std::endl;
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
 		for(GLuint col = 0; col < PIECE_SIZE; ++col) {
 			if(piece[row][col] != NULL) {
@@ -241,7 +310,7 @@ Block::push(){
 
 void
 Block::pop(){
-	std::cout << "pop piece" << std::endl;
+	// std::cout << "pop piece" << std::endl;
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
 		for(GLuint col = 0; col < PIECE_SIZE; ++col) {
 			if(piece[row][col] != NULL) {

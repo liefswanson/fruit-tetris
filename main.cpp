@@ -99,7 +99,7 @@ Grid::Render(){
 
 
 void
-key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     std::cout << key << std::endl;
 	if (action == GLFW_PRESS) {
 		switch(key){
@@ -121,53 +121,39 @@ key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 			}
 			break;
 		case GLFW_KEY_SPACE:
+			// TODO shuffle fruits
+			if(mods == GLFW_MOD_SHIFT) {
+				globalBlock->shuffleL();
+			} else {
+				globalBlock->shuffleR();
+			}
+			break;
+		case GLFW_KEY_DOWN:
 			if(globalBlock->canMoveD()) {
 				globalBlock->applyMove();	
 			} else {
 				globalBlock->discardMove();	
 			}
 			break;
-		case GLFW_KEY_DOWN:
-			if(globalBlock->canRotW()) {
-				globalBlock->applyMove();	
-			} else {
-				globalBlock->discardMove();	
-			}
-			break;
 		case GLFW_KEY_UP:
-			if(globalBlock->canRotC()) {
-				globalBlock->applyMove();	
+			if(mods == GLFW_MOD_SHIFT) {
+				if(globalBlock->canRotC()) {
+					globalBlock->applyMove();	
+				} else {
+					globalBlock->discardMove();	
+				}
 			} else {
-				globalBlock->discardMove();	
+				if(globalBlock->canRotW()) {
+					globalBlock->applyMove();	
+				} else {
+					globalBlock->discardMove();	
+				}	
 			}
 			break;
 		}
 	}
 }
-	// 	if(key == GLFW_KEY_ESCAPE){
-	// 		glfwSetWindowShouldClose(window, GL_TRUE);
-	// 	} else if (key == GLFW_KEY_RIGHT){
-	// 		if(globalBlock->canMoveR()) {
-	// 			globalBlock->applyMove();	
-	// 		}
-	// 	} else if (key == GLFW_KEY_LEFT){
-	// 		if(globalBlock->canMoveL()) {
-	// 			globalBlock->applyMove();	
-	// 		}
-	// 	} else if (key == GLFW_KEY_DOWN){
-	// 		if(globalBlock->canRotW()) {
-	// 			globalBlock->applyMove();
-	// 		}
-	// 	} else if (key == GLFW_KEY_UP){
-	// 		if(globalBlock->canRotC()) {
-	// 			globalBlock->applyMove();
-	// 		}
-	// 	} else if (key == GLFW_KEY_SPACE){
-	// 		if(globalBlock->canMoveD()) {
-	// 			globalBlock->applyMove();
-	// 		}
-	// 	}
-	// }
+
 //-------------------------------------------------------------------------------------------------
 int
 main(int argc, char *argv[]) {
