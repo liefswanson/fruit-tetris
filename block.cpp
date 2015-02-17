@@ -160,12 +160,15 @@ Block::makeBlock(){
 	rotation = 0;
 	switch(shape) {
 	case I_piece:
+		// std::cout << 'I' << std::endl;
 		makeI();
 		break;
 	case L_piece:
+		// std::cout << 'L' << std::endl;
 		makeL();
 		break;
 	case S_piece:
+		// rystd::cout << 'S' << std::endl;
 		makeS();
 		break;
 	}
@@ -173,11 +176,21 @@ Block::makeBlock(){
 	syncCheck();
 	
 	GLuint rotations = rand() % 4;
-	std::cout << rotations  << " rotations on new block" << std::endl;
+	// std::cout << rotations  << " rotations on new block" << std::endl;
 	for(GLuint i = 0; i < rotations; ++i) {
 		canRotW();
 		applyMove();
 	}
+}
+
+void
+Block::spawnTile(GLuint row, GLuint col, GLuint order) {
+	GLuint fruit;
+	fruit = randFruit();
+	piece[row][col] = board->makeAt(row +rowDeltaPiece,
+									col +colDeltaPiece,
+									vert, frags[fruit], fruit);
+	orderPiece[order] = piece[row][col];
 }
 
 void
@@ -189,26 +202,12 @@ Block::makeI(){
 	//
     //2, 0..3
 
-	std::cout << 'I' << std::endl;
-	GLuint fruit;
-	fruit = randFruit();
-	piece[2][0] = board->makeAt(2 +rowDeltaPiece, 0 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[0] = piece[0][2];
-
-	fruit = randFruit();
-	piece[2][1] = board->makeAt(2 +rowDeltaPiece, 1 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[1] = piece[2][1];
-
-	fruit = randFruit();
-	piece[2][2] = board->makeAt(2 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[2] = piece[2][2];
-
-	fruit = randFruit();
-	piece[2][3] = board->makeAt(2 +rowDeltaPiece, 3 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[3] = piece[2][3];
-
-	
+	spawnTile(2, 0, 0);
+	spawnTile(2, 1, 1);
+	spawnTile(2, 2, 2);
+	spawnTile(2, 3, 3);
 }
+
 
 void
 Block::makeL(){
@@ -219,24 +218,11 @@ Block::makeL(){
 	//
     //3, 1
 	//2, 1..3
-
-	std::cout << 'L' << std::endl;
-	GLuint fruit;
-	fruit = randFruit();
-	piece[3][1] = board->makeAt(3 +rowDeltaPiece, 1 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[0] = piece[3][1];
-
-	fruit = randFruit();
-	piece[2][1] = board->makeAt(2 +rowDeltaPiece, 1 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[1] = piece[2][1];
-
-	fruit = randFruit();
-	piece[2][2] = board->makeAt(2 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[2] = piece[2][2];
-
-	fruit = randFruit();
-	piece[2][3] = board->makeAt(2 +rowDeltaPiece, 3 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[3] = piece[2][3];
+	
+	spawnTile(3, 1, 0);
+	spawnTile(2, 1, 1);
+	spawnTile(2, 2, 2);
+	spawnTile(2, 3, 3);
 }
 
 void
@@ -249,24 +235,10 @@ Block::makeS(){
     //1..2, 3
 	//2..3, 2
 
-
-	std::cout << 'S' << std::endl;
-	GLuint fruit;
-	fruit = randFruit();
-	piece[3][1] = board->makeAt(3 +rowDeltaPiece, 1 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[0] = piece[1][3];
-
-	fruit = randFruit();
-	piece[3][2] = board->makeAt(3 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[1] = piece[3][2];
-	
-	fruit = randFruit();
-	piece[2][2] = board->makeAt(2 +rowDeltaPiece, 2 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[2] = piece[2][2];
-
-	fruit = randFruit();
-	piece[2][3] = board->makeAt(2 +rowDeltaPiece, 3 +colDeltaPiece, vert, frags[fruit], fruit);
-	orderPiece[3] = piece[2][3];
+	spawnTile(3, 1, 0);
+	spawnTile(3, 2, 1);
+	spawnTile(2, 2, 2);
+	spawnTile(2, 3, 3);
 }
 
 GLuint

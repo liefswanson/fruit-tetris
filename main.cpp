@@ -43,7 +43,7 @@ RangeMap xpercent  = RangeMap(0, 100,  0,                             2 * PERCEN
 RangeMap ypercent  = RangeMap(0, 100,  0,                             2 * PERCENT_INSIDE_MARGINS_HEIGHT);
 
 Board board (ROWS, COLS, SPAWN_ROWS, PERCENT_INSIDE_MARGINS_HEIGHT, PERCENT_INSIDE_MARGINS_WIDTH);
-
+Tile** diff;
 //needed because the callback for key events needs access
 Block* globalBlock = NULL;
 
@@ -109,6 +109,11 @@ moveBlockDown(){
 		globalBlock->applyMove();	
 	} else {
 		globalBlock->makeBlock();
+		// diff is pointer to array on heap
+		diff = board.ScanForFullRows();
+		board.debugDiff(diff);
+		delete[] diff;
+        //board.RemoveDiff(diff);
 	}
 }
 

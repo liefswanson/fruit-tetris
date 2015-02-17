@@ -121,31 +121,39 @@ Board::moveR(GLuint row, GLuint col) {
 Tile**
 Board::ScanForFullRows() {
 	// TODO note the use of spawnrows this may introduce bugs
-	auto diff = new Tile*[cols*(rows - spawnRows)];
-	for(GLuint row = 0; row < rows - spawnRows; ++row){
+	auto diff = new Tile*[cols*(rows-spawnRows)];
+	for(GLuint row = spawnRows; row < rows; ++row){
 		GLboolean valid = GL_TRUE;
 		for(GLuint col = 0; col < cols; ++col) {
-			if (board[cols*(row + spawnRows) + col] == NULL) {
+			if (board[cols*(row) + col] == NULL) {
 				valid = GL_FALSE;
 				break;
 			} else {
-				diff[cols*row + col] = board[cols*(row + spawnRows) + col];
+				diff[cols*(row - spawnRows) + col] = board[cols*row + col];
 			}
 		}
 		if(!valid) {
 			for(GLuint col = 0; col < cols; ++col) {
-				diff[cols*row + col] = NULL;
+				diff[cols*(row - spawnRows) + col] = NULL;
 			}
 		}
 	}
 	return diff;
 }
 
+Tile**
+Board::ScanForFruitChains() {
+	
+	return NULL;
+}
+
 void
 Board::debugDiff(Tile** diff){
-	for(GLuint row = spawnRows; row < rows; ++row) {
+	for(GLuint row = 0; row < rows-spawnRows; ++row) {
+		std::cout << std::setfill(' ') << std::setw(2) << row;
+		std::cout << ':';
 		for(GLuint col = 0; col < cols; ++col) {
-			if(at(row,col) != NULL) {
+			if(diff[cols*row + col] != NULL) {
 				std::cout << '+';
 			} else {
 				std::cout << '-';
@@ -157,14 +165,21 @@ Board::debugDiff(Tile** diff){
 }
 
 Tile**
-Board::ScanForFruitChains() {
-	return NULL;
+Board::MergeDiffs(Tile** a, Tile** b) {
+	Tile** val = new Tile* [cols*(rows-spawnRows)];
+	for(GLuint i = 0; i < cols*(rows-spawnRows); i++){
+		if (a[i] != NULL) {
+			val[i] = a[i];
+		} else {
+			val[i] = b[i];
+		}
+	}
+	return val;
 }
 
 void
 Board::RemoveDiff(Tile** diff) {
-
-	delete[] diff;
+	
 }
 
 void

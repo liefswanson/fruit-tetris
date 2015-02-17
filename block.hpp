@@ -44,6 +44,7 @@ private:
 	GLuint randFruit();
 	
 	// makes the shape into that of indicated letter
+	void spawnTile(GLuint row, GLuint col, GLuint order);
 	void makeI();
 	void makeL();
 	void makeS();

@@ -4,6 +4,8 @@
 #include <vector>
 #include <algorithm>
 #include <utility>
+#include <iomanip>
+#include <thread>
 #include "tile.hpp"
 #include "rangeMap.hpp"
 
@@ -21,6 +23,10 @@ private:
 	GLuint spawnRows;
 	GLuint rows;
 	GLuint cols;
+
+	const GLuint chainLength = 3;
+
+	Tile** MergeDiffs(Tile** a, Tile** b);
 
 public:
 	// the actual board state
