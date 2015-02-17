@@ -40,8 +40,8 @@ Block::checkMove() {
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
 		for(GLuint col = 0; col < PIECE_SIZE; ++col) {
 			if(check[row][col] != NULL){
-				if(!board->on(row +rowDeltaCheck +board->SpawnRows(), col +colDeltaCheck) ||
-				    board->at(row +rowDeltaCheck +board->SpawnRows(), col +colDeltaCheck) != NULL){
+				if(!board->on(row +rowDeltaCheck, col +colDeltaCheck) ||
+				    board->at(row +rowDeltaCheck, col +colDeltaCheck) != NULL){
 					temp = GL_FALSE;
 				}
 			}
