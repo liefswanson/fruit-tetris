@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <algorithm>
-#include <utility>
 #include "tile.hpp"
 #include "rangeMap.hpp"
 
@@ -31,10 +30,10 @@ public:
 	~Board();
 
 	// returns occupant of position (row, column), or NULL if empty
-	Tile*     at    (GLuint row,   GLuint col);
-	Tile*     makeAt(GLuint row,   GLuint col,
+	Tile*     at    (GLuint row, GLuint col);
+	Tile*     makeAt(GLuint row, GLuint col,
 					 GLfloat vert, GLfloat frag, GLuint fruit);
-	void      set   (GLuint row,   GLuint col,
+	void      set   (GLuint row, GLuint col,
 					 Tile* val);
 	
 	
@@ -47,11 +46,11 @@ public:
 
 	void Render();
 
-	Tile**         ScanForFullRows();
-	Tile**         ScanForFruitChains();
-	void           RemoveDiff(Tile** diff);
-	void           debugDiff(Tile** diff);
-	
+	std::vector<std::vector<std::tuple<GLuint, GLuint>>> ScanForRows();
+	std::vector<std::vector<std::tuTile*>> ScanForFruitChains();
+
+	void                RemoveRows       (std::vector<std::vector<std::tuple<GLuint>>>);
+	void                RemoveFruitChains(std::vector<std::vector<std::tuple<GLuint>>>);
 	GLuint SpawnRows();
 	GLuint Rows();
 	GLuint Cols();

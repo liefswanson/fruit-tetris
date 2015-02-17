@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <utility>
 #include <unistd.h>
 
 #include "tile.hpp"
@@ -44,6 +46,9 @@ Board board (ROWS, COLS, SPAWN_ROWS, PERCENT_INSIDE_MARGINS_HEIGHT, PERCENT_INSI
 
 //needed because the callback for key events needs access
 Block* globalBlock = NULL;
+
+
+//-------------------------------------------------------------------------------------------------
 
 class Grid {
 private:
@@ -98,67 +103,92 @@ Grid::Render(){
 
 //-------------------------------------------------------------------------------------------------
 
+void
+moveBlockDown(){
+	if(globalBlock->canMoveD()) {
+		globalBlock->applyMove();	
+	} else {
+		globalBlock->makeBlock();
+	}
+}
 
 void
-key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    std::cout << key << std::endl;
-	if (action == GLFW_PRESS) {
-		switch(key){
+moveBlockRight(){
+	if(globalBlock->canMoveR()) {
+		globalBlock->applyMove();	
+	} else {
+		globalBlock->discardMove();	
+	}
+}
+
+void
+moveBlockLeft(){
+	if(globalBlock->canMoveL()) {
+		globalBlock->applyMove();	
+	} else {
+		globalBlock->discardMove();	
+	}
+}
+
+void
+rotateBlock(GLint modifier) {
+	if(modifier == GLFW_MOD_SHIFT) {
+		if(globalBlock->canRotC()) {
+			globalBlock->applyMove();	
+		} else {
+			globalBlock->discardMove();	
+		}
+	} else {
+		if(globalBlock->canRotW()) {
+			globalBlock->applyMove();	
+		} else {
+			globalBlock->discardMove();	
+		}	
+	}
+	
+}
+
+void
+shuffleBlock(GLint modifier) {
+	if(modifier == GLFW_MOD_SHIFT) {
+		globalBlock->shuffleL();
+	} else {
+		globalBlock->shuffleR();
+	}
+}
+
+void
+key_callback(GLFWwindow* window, GLint key, GLint scancode, GLint action, GLint mods) {
+	if (action == GLFW_PRESS ||
+		action == GLFW_REPEAT) {
+		switch(key) {
+		case GLFW_KEY_R:
+		case GLFW_KEY_Q:
 		case GLFW_KEY_ESCAPE:
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
 		case GLFW_KEY_RIGHT:
-			if(globalBlock->canMoveR()) {
-				globalBlock->applyMove();	
-			} else {
-				globalBlock->discardMove();	
-			}
+			moveBlockRight();
 			break;
 		case GLFW_KEY_LEFT:
-			if(globalBlock->canMoveL()) {
-				globalBlock->applyMove();	
-			} else {
-				globalBlock->discardMove();	
-			}
+			moveBlockLeft();
+			break;
+		case GLFW_KEY_DOWN:
+			moveBlockDown();
+			break;
+		case GLFW_KEY_UP:
+			rotateBlock(mods);
 			break;
 		case GLFW_KEY_SPACE:
-			
-			if(mods == GLFW_MOD_SHIFT) {
-				globalBlock->shuffleL();
-			} else {
-				globalBlock->shuffleR();
-			}
-			break;
-
-		case GLFW_KEY_DOWN:
-
-			if(globalBlock->canMoveD()) {
-				globalBlock->applyMove();	
-			} else {
-				globalBlock->discardMove();	
-			}
-			break;
-
-		case GLFW_KEY_UP:
-			if(mods == GLFW_MOD_SHIFT) {
-				if(globalBlock->canRotC()) {
-					globalBlock->applyMove();	
-				} else {
-					globalBlock->discardMove();	
-				}
-			} else {
-				if(globalBlock->canRotW()) {
-					globalBlock->applyMove();	
-				} else {
-					globalBlock->discardMove();	
-				}	
-			}
+			shuffleBlock(mods);
 			break;
 		}
 	}
 }
 
+
 //-------------------------------------------------------------------------------------------------
+
 int
 main(int argc, char *argv[]) {
 	glfwInit();
@@ -203,8 +233,7 @@ main(int argc, char *argv[]) {
 	glViewport(0, 0, WIDTH + 2*MARGINS, HEIGHT + 2*MARGINS);
 
 	Grid grid (vBasic, fGrid);
-	Board* temp = &board;
-	Block block(temp, frags, vBasic);
+	Block block(&board, frags, vBasic);
 	globalBlock = &block;
 
 	block.makeBlock();

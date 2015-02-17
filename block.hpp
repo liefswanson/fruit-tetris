@@ -38,6 +38,9 @@ private:
 	// pointer to the board the block is bound to
 	Board* board;
 
+	GLuint shape;
+	GLuint rotation;
+
 	GLuint randFruit();
 	
 	// makes the shape into that of indicated letter

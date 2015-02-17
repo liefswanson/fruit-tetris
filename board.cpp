@@ -118,6 +118,54 @@ Board::moveR(GLuint row, GLuint col) {
 	board[cols*row + col] = NULL;
 }
 
+Tile**
+Board::ScanForFullRows() {
+	// TODO note the use of spawnrows this may introduce bugs
+	auto diff = new Tile*[cols*(rows - spawnRows)];
+	for(GLuint row = 0; row < rows - spawnRows; ++row){
+		GLboolean valid = GL_TRUE;
+		for(GLuint col = 0; col < cols; ++col) {
+			if (board[cols*(row + spawnRows) + col] == NULL) {
+				valid = GL_FALSE;
+				break;
+			} else {
+				diff[cols*row + col] = board[cols*(row + spawnRows) + col];
+			}
+		}
+		if(!valid) {
+			for(GLuint col = 0; col < cols; ++col) {
+				diff[cols*row + col] = NULL;
+			}
+		}
+	}
+	return diff;
+}
+
+void
+Board::debugDiff(Tile** diff){
+	for(GLuint row = spawnRows; row < rows; ++row) {
+		for(GLuint col = 0; col < cols; ++col) {
+			if(at(row,col) != NULL) {
+				std::cout << '+';
+			} else {
+				std::cout << '-';
+			}
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+}
+
+Tile**
+Board::ScanForFruitChains() {
+	return NULL;
+}
+
+void
+Board::RemoveDiff(Tile** diff) {
+
+	delete[] diff;
+}
 
 void
 Board::Render() {
