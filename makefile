@@ -22,8 +22,8 @@ rangeMap.o: rangeMap.cpp
 board.o: board.cpp tile.o
 	$(cc) $(std) $(flags) -c tile.o board.cpp -o board.o
 
-block.o: block.cpp board.o tile.o
-	$(cc) $(std) $(flags) -c block.cpp board.o tile.o -o block.o
+block.o: block.cpp
+	$(cc) $(std) $(flags) -c block.cpp -o block.o
 
 test: rangeMapTest
 

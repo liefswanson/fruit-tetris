@@ -1,15 +1,14 @@
 #include "board.hpp"
 
 Board::Board(GLuint rows, GLuint cols, GLuint spawnRows,
-			 GLfloat percentInsideMarginsHeight, GLfloat percentInsideMarginsWidth,
-			 GLfloat hwRatio) {
+			 GLfloat percentInsideMarginsHeight, GLfloat percentInsideMarginsWidth) {
 	this->rows      = rows;
 	this->cols      = cols;
 	this->spawnRows = spawnRows;
+	
+	board = new Tile* [cols*(rows)];
 
-	board = new Tile* [cols*(rows+spawnRows)];
-
-	for (GLuint i = 0; i < cols*(rows+spawnRows); ++i) {
+	for (GLuint i = 0; i < cols*(rows); ++i) {
 		board[i] = NULL;
 	}
 
@@ -20,7 +19,7 @@ Board::Board(GLuint rows, GLuint cols, GLuint spawnRows,
 }
 
 Board::~Board() {
-	for (GLuint i = 0; i < cols*(rows + spawnRows); ++i) {
+	for (GLuint i = 0; i < cols*(rows); ++i) {
 		if (board[i] != NULL){
 			delete board[i];
 		}
@@ -48,7 +47,7 @@ Board::makeAt(GLuint row, GLuint col, GLfloat vert, GLfloat frag, GLuint fruit){
 		set(row, col,
 			new Tile(0,0,
 					 xpercent->map(100.f/cols),
-					 ypercent->map(100.f/rows),
+					 ypercent->map(100.f/(rows - spawnRows)),
 					 vert, frag, fruit));
 		return at(row, col);
 	} else {
@@ -65,7 +64,7 @@ Board::set(GLuint row, GLuint col, Tile* val) {
 GLboolean
 Board::canMoveD(GLuint row, GLuint col) {
 	auto temp = row-1;
-	if (temp > rows + spawnRows) {
+	if (temp > rows) {
 		return GL_FALSE;
 	}
 	if (at(temp, col) == NULL){
@@ -78,7 +77,7 @@ Board::canMoveD(GLuint row, GLuint col) {
 GLboolean
 Board::canMoveL(GLuint row, GLuint col) {
 	auto temp = col-1;
-	if (temp > rows + spawnRows) {
+	if (temp > rows) {
 		return GL_FALSE;
 	}
 	if (at(row,temp) == NULL){
@@ -91,7 +90,7 @@ Board::canMoveL(GLuint row, GLuint col) {
 GLboolean
 Board::canMoveR(GLuint row, GLuint col) {
 	auto temp = col+1;
-	if (temp > rows + spawnRows) {
+	if (temp > rows) {
 		return GL_FALSE;
 	}
 	if (at(row,temp) == NULL){
@@ -122,13 +121,14 @@ Board::moveR(GLuint row, GLuint col) {
 
 void
 Board::Render() {
-	for (GLuint col = 0; col < cols; ++col) {
-		for (GLuint row = spawnRows; row < rows; ++row) {
+	for (GLuint row = spawnRows; row < rows; ++row) {
+		for (GLuint col = 0; col < cols; ++col) {
 			Tile* current = this->at(row, col);
 			if (current != NULL) {
 				//FIXME screen size hack pass in real values
 				//std::cout << row << ' ' << col  << std::endl;
-				current->Relocate(xposition->map(col * 100.f/cols), yposition->map((row - spawnRows) * 100.f/rows));
+				current->Relocate(xposition->map(col * 100.f/cols),
+								  yposition->map((row - spawnRows) * 100.f/(rows - spawnRows)));
 				current->Render();
 			}
 		}
@@ -144,6 +144,6 @@ Board::Cols()      {return cols;}
 
 GLboolean
 Board::on(GLuint row, GLuint col) {
-	return       row < rows +spawnRows &&
+	return       row < rows &&
 				 col < cols;
 }

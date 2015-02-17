@@ -26,8 +26,7 @@ public:
 	Tile** board;
 
 	Board(GLuint rows, GLuint cols, GLuint spawnRows,
-		  GLfloat percentInsideMarginsHeight, GLfloat percentInsideMarginsWidth,
-		  GLfloat hwRatio);
+		  GLfloat percentInsideMarginsHeight, GLfloat percentInsideMarginsWidth);
 	~Board();
 
 	// returns occupant of position (row, column), or NULL if empty

@@ -17,8 +17,11 @@
 // all this does is control where the tiles are located on the board until they can no longer move
 class Block {
 private:
-	GLuint rowDelta;
-	GLuint colDelta;
+	GLuint rowDeltaPiece;
+	GLuint colDeltaPiece;
+	
+	GLuint rowDeltaCheck;
+	GLuint colDeltaCheck;
 
 	Tile* piece[PIECE_SIZE][PIECE_SIZE] = {};
 	Tile* check[PIECE_SIZE][PIECE_SIZE] = {};
@@ -40,8 +43,18 @@ private:
 	
 	
 	GLboolean checkMove();
-	
-	
+
+	// sync Piece to Check 
+	void syncPiece();
+	// sync Check to Piece
+	void syncCheck();
+
+	// push to and pop piece off the board
+	void push();
+	void pop();
+
+	void debugBoard();
+
 public:
 	Block(Board* board, GLuint frags[], GLuint vert);
 	~Block();
@@ -57,7 +70,7 @@ public:
 	void      makeBlock();
 	
 	void      applyMove();
-	//void      discardMove();
+	void      discardMove();
 
 	GLboolean canRotW();
 	GLboolean canRotC();

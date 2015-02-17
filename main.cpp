@@ -24,7 +24,7 @@ const GLfloat HW_RATIO = (GLfloat)HEIGHT/
 	                     (GLfloat)WIDTH;
 
 #define SPAWN_ROWS 5
-#define ROWS       20
+#define ROWS       25
 #define COLS       10
 
 const GLuint MARGINS = 20;
@@ -40,7 +40,7 @@ RangeMap yposition = RangeMap(0, 100,  PERCENT_INSIDE_MARGINS_HEIGHT,    -PERCEN
 RangeMap xpercent  = RangeMap(0, 100,  0,                             2 * PERCENT_INSIDE_MARGINS_WIDTH);
 RangeMap ypercent  = RangeMap(0, 100,  0,                             2 * PERCENT_INSIDE_MARGINS_HEIGHT);
 
-Board board (ROWS, COLS, SPAWN_ROWS, PERCENT_INSIDE_MARGINS_HEIGHT, PERCENT_INSIDE_MARGINS_WIDTH, HW_RATIO);
+Board board (ROWS, COLS, SPAWN_ROWS, PERCENT_INSIDE_MARGINS_HEIGHT, PERCENT_INSIDE_MARGINS_WIDTH);
 
 //needed because the callback for key events needs access
 Block* globalBlock = NULL;
@@ -107,34 +107,67 @@ key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
 		case GLFW_KEY_RIGHT:
-			if(globalBlock->canMoveR() == GL_TRUE) {
+			if(globalBlock->canMoveR()) {
 				globalBlock->applyMove();	
+			} else {
+				globalBlock->discardMove();	
 			}
 			break;
 		case GLFW_KEY_LEFT:
-			if(globalBlock->canMoveL() == GL_TRUE){
-				globalBlock->applyMove();
-			}
-			break;
-		case GLFW_KEY_DOWN:
-			if(globalBlock->canRotW() == GL_TRUE) {
-				globalBlock->applyMove();
-			}
-			break;
-		case GLFW_KEY_UP:
-			if(globalBlock->canRotC() == GL_TRUE) {
-				globalBlock->applyMove();
+			if(globalBlock->canMoveL()) {
+				globalBlock->applyMove();	
+			} else {
+				globalBlock->discardMove();	
 			}
 			break;
 		case GLFW_KEY_SPACE:
-			if(globalBlock->canMoveD() == GL_TRUE) {
-				globalBlock->applyMove();
+			if(globalBlock->canMoveD()) {
+				globalBlock->applyMove();	
+			} else {
+				globalBlock->discardMove();	
+			}
+			break;
+		case GLFW_KEY_DOWN:
+			if(globalBlock->canRotW()) {
+				globalBlock->applyMove();	
+			} else {
+				globalBlock->discardMove();	
+			}
+			break;
+		case GLFW_KEY_UP:
+			if(globalBlock->canRotC()) {
+				globalBlock->applyMove();	
+			} else {
+				globalBlock->discardMove();	
 			}
 			break;
 		}
 	}
 }
-
+	// 	if(key == GLFW_KEY_ESCAPE){
+	// 		glfwSetWindowShouldClose(window, GL_TRUE);
+	// 	} else if (key == GLFW_KEY_RIGHT){
+	// 		if(globalBlock->canMoveR()) {
+	// 			globalBlock->applyMove();	
+	// 		}
+	// 	} else if (key == GLFW_KEY_LEFT){
+	// 		if(globalBlock->canMoveL()) {
+	// 			globalBlock->applyMove();	
+	// 		}
+	// 	} else if (key == GLFW_KEY_DOWN){
+	// 		if(globalBlock->canRotW()) {
+	// 			globalBlock->applyMove();
+	// 		}
+	// 	} else if (key == GLFW_KEY_UP){
+	// 		if(globalBlock->canRotC()) {
+	// 			globalBlock->applyMove();
+	// 		}
+	// 	} else if (key == GLFW_KEY_SPACE){
+	// 		if(globalBlock->canMoveD()) {
+	// 			globalBlock->applyMove();
+	// 		}
+	// 	}
+	// }
 //-------------------------------------------------------------------------------------------------
 int
 main(int argc, char *argv[]) {
@@ -191,11 +224,15 @@ main(int argc, char *argv[]) {
 		glClearColor(BG, BG, BG, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		// if(globalBlock->canMoveD() == GL_TRUE) {
+		// 	globalBlock->applyMove();
+		// }
+
 		board.Render();
 		grid.Render();
 		
 		glfwSwapBuffers(window);
-		//usleep(100);
+		//sleep(1);
 	}
 
 	glfwTerminate(); 
