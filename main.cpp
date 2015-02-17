@@ -222,7 +222,7 @@ main(int argc, char *argv[]) {
     }
 
 	glfwSetKeyCallback(window, key_callback);
-
+	
 	GLuint vBasic  = readCompile("shaders/basic.vert",   GL_VERTEX_SHADER);
 	
 	GLuint frags[6];
