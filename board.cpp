@@ -68,41 +68,59 @@ Board::set(GLuint row, GLuint col, Tile* val) {
 
 GLboolean
 Board::canMoveD(GLuint row, GLuint col) {
-	return GL_TRUE;
-
+	auto temp = row-1;
+	if (temp > rows + spawnRows) {
+		return GL_FALSE;
+	}
+	if (at(temp, col) == NULL){
+		return GL_TRUE;
+	} else {
+		return GL_FALSE;
+	}
 }
-
 
 GLboolean
 Board::canMoveL(GLuint row, GLuint col) {
-	return GL_TRUE;
-
+	auto temp = col-1;
+	if (temp > rows + spawnRows) {
+		return GL_FALSE;
+	}
+	if (at(row,temp) == NULL){
+		return GL_TRUE;
+	} else {
+		return GL_FALSE;
+	}
 }
-
 
 GLboolean
 Board::canMoveR(GLuint row, GLuint col) {
-	return GL_TRUE;
-	
+	auto temp = col+1;
+	if (temp > rows + spawnRows) {
+		return GL_FALSE;
+	}
+	if (at(row,temp) == NULL){
+		return GL_TRUE;
+	} else {
+		return GL_FALSE;
+	}
 }
-
 
 void
 Board::moveD(GLuint row, GLuint col) {
-	
+	board[cols*row-1 + col] = board[cols*row + col];
+	board[cols*row + col] = NULL;
 }
-
-
 
 void
 Board::moveL(GLuint row, GLuint col) {
-	
+	board[cols*row + col-1] = board[cols*row + col];
+	board[cols*row + col] = NULL;
 }
-
 
 void
 Board::moveR(GLuint row, GLuint col) {
-	
+	board[cols*row + col+1] = board[cols*row + col];
+	board[cols*row + col] = NULL;
 }
 
 
@@ -113,10 +131,14 @@ Board::Render() {
 			Tile* current = this->at(row, col);
 			if (current != NULL) {
 				//FIXME screen size hack pass in real values
-				//std::cout << row << ' ' << col  << std::endl;
+				// Std::Cout << Row << ' ' << Col  << Std::Endl;
 				current->Relocate(xposition->map(col * 100.f/cols), yposition->map((row - spawnRows) * 100.f/rows));
 				current->Render();
 			}
 		}
 	}
 }
+
+GLuint Board::SpawnRows() {return spawnRows;}
+GLuint Board::Rows()      {return rows;}
+GLuint Board::Cols()      {return cols;}

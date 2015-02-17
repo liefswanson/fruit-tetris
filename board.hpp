@@ -1,6 +1,8 @@
 #ifndef __BOARD_HPP__
 #define __BOARD_HPP__
 
+
+#include <algorithm>
 #include "tile.hpp"
 #include "rangeMap.hpp"
 
@@ -29,18 +31,24 @@ public:
 	~Board();
 
 	// returns occupant of position (row, column), or NULL if empty
-	Tile*     at(GLuint row, GLuint col);
-	Tile*     makeAt(GLuint row, GLuint col, GLfloat vert, GLfloat frag, GLuint fruit);
-	GLboolean set(GLuint row, GLuint col, Tile* val);
+	Tile*     at    (GLuint row, GLuint col);
+	Tile*     makeAt(GLuint row, GLuint col,
+					 GLfloat vert, GLfloat frag, GLuint fruit);
+	GLboolean set   (GLuint row, GLuint col,
+					 Tile* val);
 	
 	
 	GLboolean      canMoveD(GLuint row, GLuint col);
 	GLboolean      canMoveL(GLuint row, GLuint col);
 	GLboolean      canMoveR(GLuint row, GLuint col);
-	void           moveD(GLuint row, GLuint col);
-	void           moveL(GLuint row, GLuint col);
-	void           moveR(GLuint row, GLuint col);
+	void           moveD   (GLuint row, GLuint col);
+	void           moveL   (GLuint row, GLuint col);
+	void           moveR   (GLuint row, GLuint col);
 
 	void Render();
+
+	GLuint SpawnRows();
+	GLuint Rows();
+	GLuint Cols();
 };
 #endif // __BOARD_HPP__

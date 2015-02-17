@@ -1,7 +1,20 @@
 #include "block.hpp"
 
-Block::Block(){
-	
+Block::Block(Board* board){
+	this->board = board;
+	auto shape = rand() % SHAPES;
+
+	switch(shape) {
+	case ELBOW:
+		makeElbow();
+		break;
+	case LINE:
+		makeLine();
+		break;
+	case BEND:
+		makeBend();
+		break;
+	}
 }
 
 
@@ -10,26 +23,71 @@ Block::~Block(){
 }
 
 GLboolean
-Block::rotateLeft(){
+Block::rotW(){
 	
 }
 
 GLboolean
-Block::rotateRight(){
+Block::rotC(){
+	
+}
+ 
+GLboolean
+Block::moveL(){
 	
 }
 
 GLboolean
-Block::moveLeft(){
+Block::moveR(){
 	
 }
 
 GLboolean
-Block::moveRight(){
+Block::moveD(){
+	
+}
+
+void
+Block::sortD(){
+	
+}
+
+void
+Block::sortL(){
+	
+}
+
+void
+Block::sortR(){
+	
+}
+
+void
+Block::sortC(){
+	
+}
+
+void
+Block::sortW(){
 	
 }
 
 GLboolean
-Block::moveDown(){
+Block::in(GLuint row, GLuint col) {
+	
+}
+
+void
+Block::makeElbow(){
+	
+}
+
+void
+Block::makeLine(){
+	
+}
+
+void
+Block::makeBend(){
 	
 }

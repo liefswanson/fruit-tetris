@@ -170,7 +170,7 @@ main() {
 	//board.makeAt(8,0,vBasic,fBanana,BANANA);
 	
 	board.makeAt(11,8,vBasic,frags[BANANA],BANANA);
-
+	
 	while (!glfwWindowShouldClose(window)){
 		glfwPollEvents();
 
