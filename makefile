@@ -4,8 +4,8 @@ std = -std=c++11
 cc = clang++
 exe = fruit-tetris
 
-all: main.o tile.o shader.o rangeMap.o board.o
-	$(cc) $(std) $(libs) main.o tile.o shader.o rangeMap.o board.o -o $(exe).exe
+all: main.o tile.o shader.o rangeMap.o board.o block.o
+	$(cc) $(std) $(libs) main.o tile.o shader.o rangeMap.o board.o block.o -o $(exe).exe
 
 main.o: main.cpp
 	$(cc) $(std) $(flags) -c main.cpp -o main.o
@@ -22,6 +22,9 @@ rangeMap.o: rangeMap.cpp
 board.o: board.cpp tile.o
 	$(cc) $(std) $(flags) -c tile.o board.cpp -o board.o
 
+block.o: block.cpp board.o tile.o
+	$(cc) $(std) $(flags) -c block.cpp board.o tile.o -o block.o
+
 test: rangeMapTest
 
 rangeMapTest: rangeMap.o tests/rangeMapTest.cpp
@@ -36,4 +39,9 @@ run: all
 
 clean:
 	rm *.o *.exe
-	rm tests/*.o tests/*.exe
+
+
+testclean:
+	cd tests
+	rm *.o *.exe
+	cd ..

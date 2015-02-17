@@ -52,18 +52,14 @@ Board::makeAt(GLuint row, GLuint col, GLfloat vert, GLfloat frag, GLuint fruit){
 					 vert, frag, fruit));
 		return at(row, col);
 	} else {
-		std::cout << "tried to place outside grid " << row << ' ' << col << std::endl;
+		std::cout << "tried to place in illegal spot " << row << ' ' << col << std::endl;
 		return NULL;	
 	} 
 }
 
-GLboolean
+void
 Board::set(GLuint row, GLuint col, Tile* val) {
-	if (at(row, col) != NULL ) {
-		return GL_FALSE;
-	}
 	board[cols*row + col] = val;
-	return GL_TRUE;
 }
 
 GLboolean
@@ -131,7 +127,7 @@ Board::Render() {
 			Tile* current = this->at(row, col);
 			if (current != NULL) {
 				//FIXME screen size hack pass in real values
-				// Std::Cout << Row << ' ' << Col  << Std::Endl;
+				//std::cout << row << ' ' << col  << std::endl;
 				current->Relocate(xposition->map(col * 100.f/cols), yposition->map((row - spawnRows) * 100.f/rows));
 				current->Render();
 			}
@@ -139,6 +135,15 @@ Board::Render() {
 	}
 }
 
-GLuint Board::SpawnRows() {return spawnRows;}
-GLuint Board::Rows()      {return rows;}
-GLuint Board::Cols()      {return cols;}
+GLuint
+Board::SpawnRows() {return spawnRows;}
+GLuint
+Board::Rows()      {return rows;}
+GLuint
+Board::Cols()      {return cols;}
+
+GLboolean
+Board::on(GLuint row, GLuint col) {
+	return       row < rows +spawnRows &&
+				 col < cols;
+}

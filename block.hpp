@@ -6,21 +6,22 @@
 #include "board.hpp"
 #include "tile.hpp"
 
-#define ELBOW  0
-#define LINE   1
-#define BEND   2
+#define I_piece  0
+#define L_piece  1
+#define S_piece  2
 
-#define SHAPES 3
+#define SHAPES   3
 
+#define PIECE_SIZE 5
 // used to give the player a way to control the pieces falling from the top of the board
 // all this does is control where the tiles are located on the board until they can no longer move
 class Block {
 private:
-	const static GLuint TILES_PER_BLOCK = 4;
-	const static GLuint r = 0;
-	const static GLuint c = 1;
-	// coordinates of the pieces in the block by row and column
-	GLuint RCs[TILES_PER_BLOCK][2];
+	GLuint rowDelta;
+	GLuint colDelta;
+
+	Tile* piece[PIECE_SIZE][PIECE_SIZE] = {};
+	Tile* check[PIECE_SIZE][PIECE_SIZE] = {};
 
 	GLuint frags[6];
 
@@ -29,28 +30,40 @@ private:
 	// pointer to the board the block is bound to
 	Board* board;
 
-	void makeElbow();
-	void makeLine();
-	void makeBend();
+	GLuint randFruit();
 	
-	void      sortD();
-	void      sortL();
-	void      sortR();
-	void      sortC();
-	void      sortW();
+	// makes the shape into that of indicated letter
+	void makeI();
+	void makeL();
+	void makeS();
+	void clear();
 	
-	GLboolean in(GLuint row, GLuint col);
+	
+	GLboolean checkMove();
+	
+	
 public:
-	Block(Board* board );
+	Block(Board* board, GLuint frags[], GLuint vert);
 	~Block();
+
+	// can  = check validity
+	// rot  = rotate
+	// move = move 
+	// W = withershins
+	// C = clockwise
+	// L = left
+	// R = right
+	// D = down
+	void      makeBlock();
 	
-	GLboolean rotW();
-	GLboolean rotC();
-	GLboolean moveL();
-	GLboolean moveR();
-	GLboolean moveD();
+	void      applyMove();
+	//void      discardMove();
 
-
+	GLboolean canRotW();
+	GLboolean canRotC();
+	GLboolean canMoveL();
+	GLboolean canMoveR();
+	GLboolean canMoveD();
 
 };
 

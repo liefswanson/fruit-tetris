@@ -6,6 +6,7 @@
 #include "shader.hpp"
 #include "rangeMap.hpp"
 #include "board.hpp"
+#include "block.hpp"
 
 // GLEW
 #define GLEW_STATIC
@@ -22,7 +23,7 @@ const GLuint HEIGHT = 700,
 const GLfloat HW_RATIO = (GLfloat)HEIGHT/
 	                     (GLfloat)WIDTH;
 
-#define SPAWN_ROWS 4
+#define SPAWN_ROWS 5
 #define ROWS       20
 #define COLS       10
 
@@ -40,6 +41,9 @@ RangeMap xpercent  = RangeMap(0, 100,  0,                             2 * PERCEN
 RangeMap ypercent  = RangeMap(0, 100,  0,                             2 * PERCENT_INSIDE_MARGINS_HEIGHT);
 
 Board board (ROWS, COLS, SPAWN_ROWS, PERCENT_INSIDE_MARGINS_HEIGHT, PERCENT_INSIDE_MARGINS_WIDTH, HW_RATIO);
+
+//needed because the callback for key events needs access
+Block* globalBlock = NULL;
 
 class Grid {
 private:
@@ -103,23 +107,37 @@ key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
 		case GLFW_KEY_RIGHT:
+			if(globalBlock->canMoveR() == GL_TRUE) {
+				globalBlock->applyMove();	
+			}
 			break;
 		case GLFW_KEY_LEFT:
+			if(globalBlock->canMoveL() == GL_TRUE){
+				globalBlock->applyMove();
+			}
 			break;
 		case GLFW_KEY_DOWN:
+			if(globalBlock->canRotW() == GL_TRUE) {
+				globalBlock->applyMove();
+			}
+			break;
+		case GLFW_KEY_UP:
+			if(globalBlock->canRotC() == GL_TRUE) {
+				globalBlock->applyMove();
+			}
 			break;
 		case GLFW_KEY_SPACE:
-			if(board.canMoveL(11, 8))
-				board.moveL(11, 8);
+			if(globalBlock->canMoveD() == GL_TRUE) {
+				globalBlock->applyMove();
+			}
 			break;
 		}
 	}
 }
 
 //-------------------------------------------------------------------------------------------------
-
 int
-main() {
+main(int argc, char *argv[]) {
 	glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -150,7 +168,8 @@ main() {
 	GLuint vBasic   = readCompile("shaders/basic.vert",   GL_VERTEX_SHADER);
 	
 	GLuint frags[6];
-	frags[APPLE]  = readCompile("shaders/apple.frag",   GL_FRAGMENT_SHADER);
+	frags[NONE]    = NONE;
+	frags[APPLE]   = readCompile("shaders/apple.frag",   GL_FRAGMENT_SHADER);
 	frags[BANANA]  = readCompile("shaders/banana.frag",  GL_FRAGMENT_SHADER);
 	frags[GRAPE]   = readCompile("shaders/grape.frag",   GL_FRAGMENT_SHADER);
 	frags[PEAR]    = readCompile("shaders/pear.frag",    GL_FRAGMENT_SHADER);
@@ -161,16 +180,11 @@ main() {
 	glViewport(0, 0, WIDTH + 2*MARGINS, HEIGHT + 2*MARGINS);
 
 	Grid grid (vBasic, fGrid);
+	Board* temp = &board;
+	Block block(temp, frags, vBasic);
+	globalBlock = &block;
 
-	//board.makeAt(4,0,vBasic,fPear,PEAR);
-	//board.makeAt(5,0,vBasic,fApple,APPLE);
-
-	//board.makeAt(6,0,vBasic,fGrape,GRAPE);
-	//board.makeAt(7,0,vBasic,fOrange,ORANGE);
-	//board.makeAt(8,0,vBasic,fBanana,BANANA);
-	
-	board.makeAt(11,8,vBasic,frags[BANANA],BANANA);
-
+	block.makeBlock();
 	while (!glfwWindowShouldClose(window)){
 		glfwPollEvents();
 
@@ -181,6 +195,7 @@ main() {
 		grid.Render();
 		
 		glfwSwapBuffers(window);
+		//usleep(100);
 	}
 
 	glfwTerminate(); 

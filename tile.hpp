@@ -15,6 +15,8 @@
 #define PEAR    4
 #define ORANGE  5
 
+#define FRUITS  6
+
 // this is an abstraction used to render rectangles by height width and (x, y) position 
 class Tile {
 	

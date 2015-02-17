@@ -34,7 +34,7 @@ public:
 	Tile*     at    (GLuint row, GLuint col);
 	Tile*     makeAt(GLuint row, GLuint col,
 					 GLfloat vert, GLfloat frag, GLuint fruit);
-	GLboolean set   (GLuint row, GLuint col,
+	void      set   (GLuint row, GLuint col,
 					 Tile* val);
 	
 	
@@ -50,5 +50,7 @@ public:
 	GLuint SpawnRows();
 	GLuint Rows();
 	GLuint Cols();
+
+	GLboolean on(GLuint row, GLuint col);
 };
 #endif // __BOARD_HPP__
