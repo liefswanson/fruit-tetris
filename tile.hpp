@@ -37,9 +37,6 @@ private:
 
 	GLuint _fruit;
 
-	// observe the type of the fruit
-	GLuint
-	fruit();
 
 public:
 	Tile(GLfloat x, GLfloat y,
@@ -55,6 +52,8 @@ public:
 
 	void
 	Render();
+	// observe the type of the fruit
+	GLuint fruit();
 };
 
 #endif  //__TILE_HPP__

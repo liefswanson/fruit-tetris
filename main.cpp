@@ -110,7 +110,8 @@ moveBlockDown(){
 	} else {
 		globalBlock->makeBlock();
 		// diff is pointer to array on heap
-		diff = board.ScanForFullRows();
+		// diff = board.ScanForFullRows();
+		diff = board.ScanForFruitChains();
 		board.debugDiff(diff);
 		delete[] diff;
         //board.RemoveDiff(diff);

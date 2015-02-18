@@ -24,9 +24,11 @@ private:
 	GLuint rows;
 	GLuint cols;
 
-	const GLuint chainLength = 3;
+	const GLuint CHAIN_LENGTH = 3; 
 
 	Tile** MergeDiffs(Tile** a, Tile** b);
+
+
 
 public:
 	// the actual board state
@@ -63,6 +65,6 @@ public:
 	GLuint Cols();
 
 	GLboolean on(GLuint row, GLuint col);
-	
+	GLuint fruit();
 };
 #endif // __BOARD_HPP__

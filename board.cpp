@@ -122,6 +122,11 @@ Tile**
 Board::ScanForFullRows() {
 	// TODO note the use of spawnrows this may introduce bugs
 	auto diff = new Tile*[cols*(rows-spawnRows)];
+
+	for (GLuint i = 0; i < cols*(rows-spawnRows); i++){
+		diff[i] = NULL;
+	}
+	
 	for(GLuint row = spawnRows; row < rows; ++row){
 		GLboolean valid = GL_TRUE;
 		for(GLuint col = 0; col < cols; ++col) {
@@ -143,8 +148,50 @@ Board::ScanForFullRows() {
 
 Tile**
 Board::ScanForFruitChains() {
-	
-	return NULL;
+
+	Tile** rowWise  = new Tile*[cols*(rows -spawnRows)];
+
+	for (GLuint i = 0; i < cols*(rows -spawnRows); i++) {
+		rowWise[i] = NULL;
+	}
+		
+	for(GLuint row = spawnRows; row < rows; ++row) {
+		GLuint chain   = 0;
+		Tile* firstLink = NULL;
+
+		for(GLuint col = 0; col < cols; ++col) {
+			Tile* temp = at(row, col);
+
+			if (firstLink != NULL) { 
+
+				if (temp != NULL &&
+					firstLink->fruit() == temp->fruit()) {
+					++chain;
+				} else {
+					if (chain >= CHAIN_LENGTH) {
+						for(GLuint i = 1; i <= chain; ++i) {
+							rowWise[cols*(row - spawnRows) + col - i] = board[cols*row + col -i];
+						}
+					}
+					firstLink = temp;
+					if (temp != NULL) {
+						chain = 1;
+					} else {
+						chain = 0;
+					}
+				}
+			
+			} else if (temp != NULL) {
+				firstLink = temp;
+				chain = 1;
+			} else {
+				chain = 0;
+			}
+		}
+
+	}
+// column wise
+	return rowWise;
 }
 
 void
@@ -210,3 +257,4 @@ Board::on(GLuint row, GLuint col) {
 	return       row < rows &&
 				 col < cols;
 }
+
