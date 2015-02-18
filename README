@@ -1,0 +1,22 @@
+Lief Swanson
+liefs@sfu.ca
+301110827
+
+additional features
+- press shift while shuffling or rotating to go the other way
+- the window is not bound to a certain size only aspect ratio, if you change window height in main.cpp it will become that size and work fine
+- in theory the boards row and column numbers should be changeable too
+- tiles ease in from off the top of the screen
+- i didnt use a single line of the skeleton code
+- blocks appear in random parts of the top row not always the same point (they also spawn randomly rotated)
+
+wish list of uncomplete features
+- figure out what the heck i was supposed to do with the floating blocks out of line with a line of like fruits... the description says nothing
+- implement animated deletions of blocks (i almost had enough time)
+- to hook all my tiles into a single shader and vao so i never have to bind a new one during render
+any point
+- multithread checks for deletion (rows and fruits)... once again i almost had enough time
+- comment more of my code
+
+additional instructions
+- if it fails to build please email me... i did compile it on the school computers and test but i am a little weary...

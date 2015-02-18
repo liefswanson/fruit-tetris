@@ -2,7 +2,7 @@ libs = -lGLEW -lglfw -lGL -lX11 -lpthread #-lXrandr -lXi
 flags = -Wall -g
 std = -std=c++11
 cc = g++
-exe = fruit-tetris
+exe = FruitTetris
 
 all: main.o tile.o shader.o rangeMap.o board.o block.o
 	$(cc) $(std) $(libs) main.o tile.o shader.o rangeMap.o board.o block.o -o $(exe)
