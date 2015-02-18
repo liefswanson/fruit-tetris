@@ -147,7 +147,7 @@ Board::ScanForFullRows() {
 }
 
 Tile**
-Board::ScanForFruitChains() {
+Board::ScanForFruitChainsR() {
 
 	Tile** rowWise  = new Tile*[cols*(rows -spawnRows)];
 
@@ -193,6 +193,55 @@ Board::ScanForFruitChains() {
 // column wise
 	return rowWise;
 }
+
+Tile**
+Board::ScanForFruitChainsL() {
+
+	Tile** rowWise  = new Tile*[cols*(rows -spawnRows)];
+
+	for (GLuint i = 0; i < cols*(rows -spawnRows); i++) {
+		rowWise[i] = NULL;
+	}
+	for(GLuint col = 0; col < cols; ++col) {
+		
+		GLuint chain   = 0;
+		Tile* firstLink = NULL;
+
+		for(GLuint row = spawnRows; row < rows; ++row) {
+			Tile* temp = at(row, col);
+
+			if (firstLink != NULL) { 
+
+				if (temp != NULL &&
+					firstLink->fruit() == temp->fruit()) {
+					++chain;
+				} else {
+					if (chain >= CHAIN_LENGTH) {
+						for(GLuint i = 1; i <= chain; ++i) {
+							rowWise[cols*(row -spawnRows -i) + col] = board[cols*(row -i) + col];
+						}
+					}
+					firstLink = temp;
+					if (temp != NULL) {
+						chain = 1;
+					} else {
+						chain = 0;
+					}
+				}
+			
+			} else if (temp != NULL) {
+				firstLink = temp;
+				chain = 1;
+			} else {
+				chain = 0;
+			}
+		}
+
+	}
+// column wise
+	return rowWise;
+}
+
 
 void
 Board::debugDiff(Tile** diff){

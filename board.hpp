@@ -26,7 +26,6 @@ private:
 
 	const GLuint CHAIN_LENGTH = 3; 
 
-	Tile** MergeDiffs(Tile** a, Tile** b);
 
 
 
@@ -56,10 +55,12 @@ public:
 	void Render();
 
 	Tile**         ScanForFullRows();
-	Tile**         ScanForFruitChains();
+	Tile**         ScanForFruitChainsL();
+	Tile**         ScanForFruitChainsR();
+	Tile**         MergeDiffs(Tile** a, Tile** b);
 	void           RemoveDiff(Tile** diff);
 	void           debugDiff(Tile** diff);
-	
+
 	GLuint SpawnRows();
 	GLuint Rows();
 	GLuint Cols();
