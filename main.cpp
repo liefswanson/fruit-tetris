@@ -109,19 +109,31 @@ moveBlockDown(){
 	} else {
 		globalBlock->makeBlock();
 		// diff is pointer to array on heap
-		// auto a = board.ScanForFullRows();
-		auto b = board.ScanForFruitChainsR();
-		auto c = board.ScanForFruitChainsL();
-		// board.debugDiff(a);
-		board.debugDiff(b);
-		board.debugDiff(c);
+		auto needsRemoval = GL_TRUE;
+		while (needsRemoval) {
+			auto a = board.ScanForFullRows();
+			auto b = board.ScanForFruitChainsRows();
+			auto c = board.ScanForFruitChainsCols();
 
-		auto diff = board.MergeDiffs(c,b);
-		board.debugDiff(diff);
-		delete[] diff;
-		//delete[] a;
-		delete[] b;
-		delete[] c;
+            //board.debugDiff(a);
+			//board.debugDiff(b);
+			//board.debugDiff(c);
+
+			auto temp = board.MergeDiffs(a,    b);
+			auto diff = board.MergeDiffs(temp, c);
+			board.RemoveDiff(diff);
+			board.debugDiff(diff);
+
+			needsRemoval = board.validateDiff(diff);
+
+			delete[] diff;
+			delete[] temp;
+
+			delete[] a;
+			delete[] b;
+			delete[] c;
+		}
+		
 //board.RemoveDiff(diff);
 	}
 }

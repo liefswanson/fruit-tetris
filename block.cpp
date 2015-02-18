@@ -187,6 +187,7 @@ void
 Block::spawnTile(GLuint row, GLuint col, GLuint order) {
 	GLuint fruit;
 	fruit = randFruit();
+	//fruit = ORANGE;
 	piece[row][col] = board->makeAt(row +rowDeltaPiece,
 									col +colDeltaPiece,
 									vert, frags[fruit], fruit);

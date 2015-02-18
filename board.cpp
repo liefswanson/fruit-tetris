@@ -120,7 +120,6 @@ Board::moveR(GLuint row, GLuint col) {
 
 Tile**
 Board::ScanForFullRows() {
-	// TODO note the use of spawnrows this may introduce bugs
 	auto diff = new Tile*[cols*(rows-spawnRows)];
 
 	for (GLuint i = 0; i < cols*(rows-spawnRows); i++){
@@ -147,19 +146,19 @@ Board::ScanForFullRows() {
 }
 
 Tile**
-Board::ScanForFruitChainsR() {
+Board::ScanForFruitChainsRows() {
 
-	Tile** rowWise  = new Tile*[cols*(rows -spawnRows)];
+	Tile** diff  = new Tile*[cols*(rows -spawnRows)];
 
 	for (GLuint i = 0; i < cols*(rows -spawnRows); i++) {
-		rowWise[i] = NULL;
+		diff[i] = NULL;
 	}
 		
 	for(GLuint row = spawnRows; row < rows; ++row) {
 		GLuint chain   = 0;
 		Tile* firstLink = NULL;
-
-		for(GLuint col = 0; col < cols; ++col) {
+		GLuint col = 0;
+		for(; col < cols; ++col) {
 			Tile* temp = at(row, col);
 
 			if (firstLink != NULL) { 
@@ -170,7 +169,7 @@ Board::ScanForFruitChainsR() {
 				} else {
 					if (chain >= CHAIN_LENGTH) {
 						for(GLuint i = 1; i <= chain; ++i) {
-							rowWise[cols*(row - spawnRows) + col - i] = board[cols*row + col -i];
+							diff[cols*(row - spawnRows) + col - i] = board[cols*row + col -i];
 						}
 					}
 					firstLink = temp;
@@ -188,26 +187,31 @@ Board::ScanForFruitChainsR() {
 				chain = 0;
 			}
 		}
-
+		if (chain >= CHAIN_LENGTH) {
+			for(GLuint i = 1; i <= chain; ++i) {
+				diff[cols*(row - spawnRows) + col - i] = board[cols*row + col -i];
+			}
+		}
 	}
 // column wise
-	return rowWise;
+	return diff;
 }
 
 Tile**
-Board::ScanForFruitChainsL() {
+Board::ScanForFruitChainsCols() {
 
-	Tile** rowWise  = new Tile*[cols*(rows -spawnRows)];
+	Tile** diff  = new Tile*[cols*(rows -spawnRows)];
 
 	for (GLuint i = 0; i < cols*(rows -spawnRows); i++) {
-		rowWise[i] = NULL;
+		diff[i] = NULL;
 	}
+	
 	for(GLuint col = 0; col < cols; ++col) {
 		
 		GLuint chain   = 0;
 		Tile* firstLink = NULL;
-
-		for(GLuint row = spawnRows; row < rows; ++row) {
+		GLuint row = spawnRows;
+		for(; row < rows; ++row) {
 			Tile* temp = at(row, col);
 
 			if (firstLink != NULL) { 
@@ -218,7 +222,7 @@ Board::ScanForFruitChainsL() {
 				} else {
 					if (chain >= CHAIN_LENGTH) {
 						for(GLuint i = 1; i <= chain; ++i) {
-							rowWise[cols*(row -spawnRows -i) + col] = board[cols*(row -i) + col];
+							diff[cols*(row -spawnRows -i) + col] = board[cols*(row -i) + col];
 						}
 					}
 					firstLink = temp;
@@ -236,10 +240,14 @@ Board::ScanForFruitChainsL() {
 				chain = 0;
 			}
 		}
-
+		if (chain >= CHAIN_LENGTH) {
+			for(GLuint i = 1; i <= chain; ++i) {
+				diff[cols*(row -spawnRows -i) + col] = board[cols*(row -i) + col];
+			}
+		}
 	}
 // column wise
-	return rowWise;
+	return diff;
 }
 
 
@@ -275,7 +283,41 @@ Board::MergeDiffs(Tile** a, Tile** b) {
 
 void
 Board::RemoveDiff(Tile** diff) {
-	
+	Tile** destination = new Tile*[cols*(rows)];
+
+	for (GLuint i = 0; i < cols*(rows -spawnRows); i++) {
+		destination[i] = NULL;
+	}
+
+	Tile** source      = board;
+
+	for(GLuint col = 0; col < cols; ++col) {
+
+		    GLuint destRow   = rows -1;
+		for(GLuint sourceRow = rows -1; sourceRow >= spawnRows; --sourceRow) {
+			while(diff[cols*(sourceRow -spawnRows) + col] != NULL) {
+				--sourceRow;
+			}
+			destination[cols*(destRow)   + col] =
+				 source[cols*(sourceRow) + col];
+			--destRow;
+		}
+	}
+	board = destination;
+	delete[] source;
+}
+GLboolean
+Board::validateDiff(Tile** diff){
+	GLuint nullCount = 0;
+	for(GLuint i = 0; i < rows -spawnRows; ++i ) {
+		if (diff[i] == NULL) {
+			++nullCount;
+		}
+	}
+	if(nullCount == rows -spawnRows ){
+		return GL_FALSE;
+	}
+	return GL_TRUE;
 }
 
 void

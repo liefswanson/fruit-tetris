@@ -55,9 +55,10 @@ public:
 	void Render();
 
 	Tile**         ScanForFullRows();
-	Tile**         ScanForFruitChainsL();
-	Tile**         ScanForFruitChainsR();
+	Tile**         ScanForFruitChainsCols();
+	Tile**         ScanForFruitChainsRows();
 	Tile**         MergeDiffs(Tile** a, Tile** b);
+	GLboolean      validateDiff(Tile** diff);
 	void           RemoveDiff(Tile** diff);
 	void           debugDiff(Tile** diff);
 
