@@ -68,5 +68,7 @@ public:
 
 	GLboolean on(GLuint row, GLuint col);
 	GLuint fruit();
+
+	void clear();
 };
 #endif // __BOARD_HPP__

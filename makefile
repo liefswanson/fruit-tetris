@@ -5,7 +5,7 @@ cc = g++
 exe = fruit-tetris
 
 all: main.o tile.o shader.o rangeMap.o board.o block.o
-	$(cc) $(std) $(libs) main.o tile.o shader.o rangeMap.o board.o block.o -o $(exe).exe
+	$(cc) $(std) $(libs) main.o tile.o shader.o rangeMap.o board.o block.o -o $(exe)
 
 main.o: main.cpp
 	$(cc) $(std) $(flags) -c main.cpp -o main.o
@@ -25,23 +25,8 @@ board.o: board.cpp
 block.o: block.cpp
 	$(cc) $(std) $(flags) -c block.cpp -o block.o
 
-test: rangeMapTest
-
-rangeMapTest: rangeMap.o tests/rangeMapTest.cpp
-	$(cc) $(std) $(flags) rangeMap.o tests/rangeMapTest.cpp -o tests/rangeMapTest.exe
-	tests/rangeMapTest.exe
-
-prun: all
-	primusrun ./$(exe).exe
-
 run: all
-	./$(exe).exe
+	./$(exe)
 
 clean:
 	rm *.o *.exe
-
-
-testclean:
-	cd tests
-	rm *.o *.exe
-	cd ..

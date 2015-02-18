@@ -296,6 +296,7 @@ Board::RemoveDiff(Tile** diff) {
 		    GLuint destRow   = rows -1;
 		for(GLuint sourceRow = rows -1; sourceRow >= spawnRows; --sourceRow) {
 			while(diff[cols*(sourceRow -spawnRows) + col] != NULL) {
+				delete source[cols*(sourceRow) + col];
 				--sourceRow;
 			}
 			destination[cols*(destRow)   + col] =
@@ -306,15 +307,16 @@ Board::RemoveDiff(Tile** diff) {
 	board = destination;
 	delete[] source;
 }
+
 GLboolean
 Board::validateDiff(Tile** diff){
-	GLuint nullCount = 0;
+	GLuint count = 0;
 	for(GLuint i = 0; i < rows -spawnRows; ++i ) {
-		if (diff[i] == NULL) {
-			++nullCount;
+		if (diff[i] != NULL) {
+			++count;
 		}
 	}
-	if(nullCount == rows -spawnRows ){
+	if(count == 0){
 		return GL_FALSE;
 	}
 	return GL_TRUE;
@@ -332,6 +334,16 @@ Board::Render() {
 								  yposition->map((row - spawnRows) * 100.f/(rows - spawnRows)));
 				current->Render();
 			}
+		}
+	}
+}
+
+void
+Board::clear() {
+	for (GLuint i = 0; i < cols*(rows); ++i) {
+		if (board[i] != NULL){
+			delete board[i];
+			board[i] = NULL;
 		}
 	}
 }

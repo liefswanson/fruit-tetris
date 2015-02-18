@@ -19,6 +19,8 @@
 
 using namespace std;
 
+const double TIME_BETWEEN_DROPS = 0.5; 
+
 const GLuint HEIGHT = 700,
 	         WIDTH  = HEIGHT/2;
 
@@ -102,11 +104,34 @@ Grid::Render(){
 
 //-------------------------------------------------------------------------------------------------
 
+GLboolean gameOver(){
+	for(GLuint row = 0; row < SPAWN_ROWS; ++row ){
+		for(GLuint col = 0; col < COLS; ++col ){
+			if(board.at(row, col) != NULL) {
+				std::cout << "Game Over" << std::endl;
+				return GL_TRUE;
+			}
+		}	
+	}
+	return GL_FALSE;
+}
+
+void reset() {
+	board.clear();
+	globalBlock->makeBlock();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void
 moveBlockDown(){
 	if(globalBlock->canMoveD()) {
 		globalBlock->applyMove();	
 	} else {
+		if (gameOver()) {
+			reset();
+			return;
+		}
 		globalBlock->makeBlock();
 		// diff is pointer to array on heap
 		auto needsRemoval = GL_TRUE;
@@ -189,6 +214,8 @@ key_callback(GLFWwindow* window, GLint key, GLint scancode, GLint action, GLint 
 		action == GLFW_REPEAT) {
 		switch(key) {
 		case GLFW_KEY_R:
+			reset();
+			break;
 		case GLFW_KEY_Q:
 		case GLFW_KEY_ESCAPE:
 			glfwSetWindowShouldClose(window, GL_TRUE);
@@ -263,16 +290,22 @@ main(int argc, char *argv[]) {
 	globalBlock = &block;
 
 	block.makeBlock();
+
+	double timeSinceLastDrop  = 0;
+	
 	while (!glfwWindowShouldClose(window)){
 		glfwPollEvents();
 
 		glClearColor(BG, BG, BG, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// if(globalBlock->canMoveD() == GL_TRUE) {
-		// 	globalBlock->applyMove();
-		// }
-
+		
+		
+		if(glfwGetTime() -timeSinceLastDrop > TIME_BETWEEN_DROPS ){
+			moveBlockDown();
+			timeSinceLastDrop = glfwGetTime();
+		}
+		
 		board.Render();
 		grid.Render();
 		
