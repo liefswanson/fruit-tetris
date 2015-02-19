@@ -61,63 +61,6 @@ Board::set(GLuint row, GLuint col, Tile* val) {
 	board[cols*row + col] = val;
 }
 
-GLboolean
-Board::canMoveD(GLuint row, GLuint col) {
-	auto temp = row-1;
-	if (temp > rows) {
-		return GL_FALSE;
-	}
-	if (at(temp, col) == NULL){
-		return GL_TRUE;
-	} else {
-		return GL_FALSE;
-	}
-}
-
-GLboolean
-Board::canMoveL(GLuint row, GLuint col) {
-	auto temp = col-1;
-	if (temp > rows) {
-		return GL_FALSE;
-	}
-	if (at(row,temp) == NULL){
-		return GL_TRUE;
-	} else {
-		return GL_FALSE;
-	}
-}
-
-GLboolean
-Board::canMoveR(GLuint row, GLuint col) {
-	auto temp = col+1;
-	if (temp > rows) {
-		return GL_FALSE;
-	}
-	if (at(row,temp) == NULL){
-		return GL_TRUE;
-	} else {
-		return GL_FALSE;
-	}
-}
-
-void
-Board::moveD(GLuint row, GLuint col) {
-	board[cols*row-1 + col] = board[cols*row + col];
-	board[cols*row + col] = NULL;
-}
-
-void
-Board::moveL(GLuint row, GLuint col) {
-	board[cols*row + col-1] = board[cols*row + col];
-	board[cols*row + col] = NULL;
-}
-
-void
-Board::moveR(GLuint row, GLuint col) {
-	board[cols*row + col+1] = board[cols*row + col];
-	board[cols*row + col] = NULL;
-}
-
 Tile**
 Board::ScanForFullRows() {
 	auto diff = new Tile*[cols*(rows-spawnRows)];
@@ -193,7 +136,6 @@ Board::ScanForFruitChainsRows() {
 			}
 		}
 	}
-// column wise
 	return diff;
 }
 
@@ -246,7 +188,6 @@ Board::ScanForFruitChainsCols() {
 			}
 		}
 	}
-// column wise
 	return diff;
 }
 

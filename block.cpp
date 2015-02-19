@@ -7,16 +7,13 @@ Block::Block(Board* board, GLuint frags[], GLuint vert){
 	for(GLuint i = 0; i < FRUITS; ++i) {
 		this->frags[i] = frags[i];
 	}
-
 }
 
-
 Block::~Block(){
-	
 }
 
 void
-Block::applyMove(){
+Block::applyMove() {
 	pop();
 	// debugBoard();
 	syncPiece();
@@ -34,7 +31,6 @@ Block::checkMove() {
 	GLboolean temp = GL_TRUE;
 	pop();
 	// debugBoard();
-
 	
 	for(GLuint row = 0; row < PIECE_SIZE; ++row) {
 		for(GLuint col = 0; col < PIECE_SIZE; ++col) {

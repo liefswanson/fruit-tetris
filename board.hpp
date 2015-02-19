@@ -38,20 +38,13 @@ public:
 	~Board();
 
 	// returns occupant of position (row, column), or NULL if empty
+	GLboolean on(GLuint row, GLuint col);
 	Tile*     at    (GLuint row,   GLuint col);
 	Tile*     makeAt(GLuint row,   GLuint col,
 					 GLfloat vert, GLfloat frag, GLuint fruit);
 	void      set   (GLuint row,   GLuint col,
 					 Tile* val);
 	
-	
-	GLboolean      canMoveD(GLuint row, GLuint col);
-	GLboolean      canMoveL(GLuint row, GLuint col);
-	GLboolean      canMoveR(GLuint row, GLuint col);
-	void           moveD   (GLuint row, GLuint col);
-	void           moveL   (GLuint row, GLuint col);
-	void           moveR   (GLuint row, GLuint col);
-
 	void Render();
 
 	Tile**         ScanForFullRows();
@@ -66,7 +59,6 @@ public:
 	GLuint Rows();
 	GLuint Cols();
 
-	GLboolean on(GLuint row, GLuint col);
 	GLuint fruit();
 
 	void clear();

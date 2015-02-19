@@ -74,11 +74,10 @@ Tile::Tile(const Tile& that){
 }
 
 Tile::~Tile(){
-	//glDeleteProgram(shader);
-	//glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);
-	//glDeleteVertexArrays(1, &VAO);
-
+	glDeleteProgram(shader);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, &VAO);
 }
 
 void
